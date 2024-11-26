@@ -115,10 +115,6 @@ export const getAllItems = catchAsyncErrors(async (req, res, next) => {
   })
 });
 
-export const getMyBiddingItems = catchAsyncErrors(async (req, res, next) => {
-  
-});
-
 export const getBiddingDetails = catchAsyncErrors(async (req, res, next) => {
   const {id} = req.params;
   if(!mongoose.Types.ObjectId.isValid(id)){
@@ -135,5 +131,18 @@ export const getBiddingDetails = catchAsyncErrors(async (req, res, next) => {
     bidders: sortedBidders,
   })
 });
+
+export const getMyBiddingItems = catchAsyncErrors(async (req, res, next) => {
+  const items = await Bidding.find({createdBy: req.user._id});
+  if(!items){
+    return next(new errorHandler("Items not found",404));
+  }
+  res.status(200).json({
+    success: true,
+    items,
+  })
+});
+
+
 export const removeFromBidding = catchAsyncErrors(async (req, res, next) => {});
 export const republishItem = catchAsyncErrors(async (req, res, next) => {});
