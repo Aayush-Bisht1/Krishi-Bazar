@@ -3,7 +3,6 @@ import {User} from "../models/userSchema.js"
 import {v2 as cloudinary} from "cloudinary"
 import { generateToken } from "../utils/jwtToken.js";
 import {catchAsyncErrors} from "../middlewares/catchAsyncErrors.js"
-import e from "express";
 
 export const register = catchAsyncErrors(async (req,res,next) => {
     if(!req.files || Object.keys(req.files).length === 0){
@@ -36,7 +35,7 @@ export const register = catchAsyncErrors(async (req,res,next) => {
 
     const cloudinaryResponse = await cloudinary.uploader.upload(profileImage.tempFilePath,
     {
-        folder: "KrishiBazar"
+        folder: "KrishiBazar_profileImages"
     } 
     );
 

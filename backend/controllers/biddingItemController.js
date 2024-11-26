@@ -1,0 +1,104 @@
+import { Bidding } from "../models/biddingSchema.js";
+import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
+import errorHandler from "../middlewares/error.js";
+import { v2 as cloudinary } from "cloudinary";
+
+export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return next(new errorHandler("Bidding Item Image Required", 400));
+  }
+  const { images } = req.files;
+  const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
+  const invalidImages = images.filter(
+    (image) => !allowedFormats.includes(image.mimetype)
+  );
+  if (invalidImages.length > 0) {
+    return next(new errorHandler("Some Images Have Invalid Format", 400));
+  }
+  const {
+    title,
+    description,
+    startingBid,
+    startTime,
+    endTime,
+    category,
+    condition,
+  } = req.body;
+  if (
+    !title ||
+    !description ||
+    !startingBid ||
+    !startTime ||
+    !endTime ||
+    !category ||
+    !condition
+  ) {
+    return next(new errorHandler("Please fill all the fields", 400));
+  }
+  if (new Date(startTime) < Date.now()) {
+    return next(new errorHandler("Start time cannot be in the past", 400));
+  }
+  if (new Date(startTime) >= new Date(endTime)) {
+    return next(new errorHandler("Start time must be less than end time", 400));
+  }
+  const alreadyOneBiddingItemActive = await Bidding.findOne({
+    createdBy: req.user._id,
+    endTime: { $gt: Date.now() },
+  });
+  if (alreadyOneBiddingItemActive) {
+    return next(
+      new errorHandler("You already have an active bidding item", 400)
+    );
+  }
+  try {
+    const cloudinaryResponses = [];
+    for (const image of images) {
+      try {
+        const cloudinaryResponse = await cloudinary.uploader.upload(
+          image.tempFilePath,
+          {
+            folder: "KrishiBazar_BiddingItems",
+          }
+        );
+        if (!cloudinaryResponse || cloudinaryResponse.error) {
+          console.error(
+            "cloudinary error ",
+            cloudinaryResponse.error || "Unknown cloudinary error."
+          );
+          return next(
+            new errorHandler(
+              "Failed to upload bidding images to cloudinary",
+              400
+            )
+          );
+        }
+        cloudinaryResponses.push({
+          public_id: cloudinaryResponse.public_id,
+          url: cloudinaryResponse.secure_url,
+        });
+      } catch (error) {
+        return next(
+          new errorHandler("Failed to upload bidding images to Cloudinary", 500)
+        );
+      }
+    }
+    const biddingItem = await Bidding.create({
+      title,
+      description,
+      startingBid,
+      startTime,
+      endTime,
+      category,
+      condition,
+      createdBy: req.user._id,
+      images: cloudinaryResponses,
+    });
+    return res.status(200).json({
+      success: true,
+      message: `Bidding Item Added Successfully at ${startTime}`,
+      biddingItem,
+    });
+  } catch (error) {
+    return next(new errorHandler(error.message, 400));
+  }
+});

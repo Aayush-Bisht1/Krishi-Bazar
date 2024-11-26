@@ -7,6 +7,8 @@ import cloudinary from "cloudinary";
 import connectDB from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./router/userRoutes.js"
+import biddingItemRouter from "./router/biddingItemRoutes.js"
+
 dotenv.config();
 
 const app = express();
@@ -33,6 +35,7 @@ app.use(fileUpload({
 }))
 
 app.use("/api/v1/user",userRouter);
+app.use("/api/v1/biddingitem",biddingItemRouter);
 
 connectDB();
 app.use(errorMiddleware);
