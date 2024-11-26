@@ -102,3 +102,11 @@ export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
     return next(new errorHandler(error.message, 400));
   }
 });
+
+export const getAllItems = catchAsyncErrors(async (req, res, next) => {
+  
+});
+export const getMyBiddingItems = catchAsyncErrors(async (req, res, next) => {});
+export const getBiddingDetails = catchAsyncErrors(async (req, res, next) => {});
+export const removeFromBidding = catchAsyncErrors(async (req, res, next) => {});
+export const republishItem = catchAsyncErrors(async (req, res, next) => {});
