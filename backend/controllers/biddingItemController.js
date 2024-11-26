@@ -2,6 +2,7 @@ import { Bidding } from "../models/biddingSchema.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import errorHandler from "../middlewares/error.js";
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose";
 
 export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -104,9 +105,35 @@ export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getAllItems = catchAsyncErrors(async (req, res, next) => {
+  let items = await Bidding.find();
+  if(!items){
+    return next(new errorHandler("Items not found",404));
+  }
+  res.status(200).json({
+    success: true,
+    items,
+  })
+});
+
+export const getMyBiddingItems = catchAsyncErrors(async (req, res, next) => {
   
 });
-export const getMyBiddingItems = catchAsyncErrors(async (req, res, next) => {});
-export const getBiddingDetails = catchAsyncErrors(async (req, res, next) => {});
+
+export const getBiddingDetails = catchAsyncErrors(async (req, res, next) => {
+  const {id} = req.params;
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return next(new errorHandler("Invalid Id",400));
+  }
+  const item = await Bidding.findById(id);
+  if(!item){
+    return next(new errorHandler("Item not found",404));
+  }
+  const sortedBidders = item.bids.sort((a,b) => b.bid - a.bid);
+  res.status(200).json({
+    success: true,
+    item,
+    bidders: sortedBidders,
+  })
+});
 export const removeFromBidding = catchAsyncErrors(async (req, res, next) => {});
 export const republishItem = catchAsyncErrors(async (req, res, next) => {});

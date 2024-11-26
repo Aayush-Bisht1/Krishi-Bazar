@@ -50,7 +50,7 @@ const biddingSchema = new mongoose.Schema({
             },
             userName: String,
             profileImage: String,
-            amount: Number
+            bid: Number
         },
     ],
     highestBidder: {
