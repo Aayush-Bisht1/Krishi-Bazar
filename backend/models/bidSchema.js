@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const bidSchema = new mongoose.Schema({
-    bid: Number,
+    amount: Number,
     bidder: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

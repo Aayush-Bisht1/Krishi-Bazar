@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./router/userRoutes.js"
 import biddingItemRouter from "./router/biddingItemRoutes.js"
+import bidRouter from "./router/bidRoutes.js"
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(fileUpload({
 
 app.use("/api/v1/user",userRouter);
 app.use("/api/v1/biddingitem",biddingItemRouter);
+app.use("/api/v1/bid",bidRouter);
 
 connectDB();
 app.use(errorMiddleware);
