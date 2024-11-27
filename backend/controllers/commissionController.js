@@ -3,6 +3,18 @@ import { User } from "../models/userSchema.js";
 import {v2 as cloudinary} from "cloudinary"
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import errorHandler from "../middlewares/error.js";
+import { Bidding } from "../models/biddingSchema.js";
+import mongoose from "mongoose";
+
+export const calculateCommission = async (biddingId) => {
+    const biddingItem = await Bidding.findById(biddingId);
+    if(!mongoose.Types.ObjectId.isValid(biddingId)){
+        return next(new errorHandler("Invalid Id",400));
+    }
+    const commissionRate = 0.01;
+    const commission = commissionRate*biddingItem.currentBid;
+    return commission;
+}
 
 export const proofOfCommission = catchAsyncErrors(async (req, res, next) => {
     if(!req.files || Object.keys(req.files).length === 0){

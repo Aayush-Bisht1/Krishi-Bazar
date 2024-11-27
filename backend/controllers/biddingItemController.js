@@ -165,14 +165,14 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
   if(!mongoose.Types.ObjectId.isValid(id)){
     return next(new errorHandler("Invalid Id",400));
   }
-  let republishItem = await Bidding.findById(id);
-  if(!republishItem){
+  let republishingItem = await Bidding.findById(id);
+  if(!republishingItem){
     return next(new errorHandler("Item not found",404));
   }
   if(!req.body.startTime || !req.body.endTime){
     return next(new errorHandler("Please provide start and end time",400));
   }
-  if(new Date(republishItem.endTime) > Date.now()){
+  if(new Date(republishingItem.endTime) > Date.now()){
     return next(new errorHandler("Item is not expired, cannot republish",400));
   }
   let data = {
@@ -185,14 +185,23 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
   if(data.startTime >= data.endTime){
     return next(new errorHandler("Start time must be less than end time",400));
   }  
+  if(republishingItem.highestBidder){
+    const highestBidder = User.findById(republishingItem.highestBidder);
+    highestBidder.moneySpent -= republishingItem.currentBid;
+    highestBidder.biddingsWon -= 1;
+    highestBidder.save();
+  }
+
   data.bids = [];
+  data.currentBid = 0;
+  data.highestBidder = null;
   data.commissionCalculated = false; 
-  republishItem = await Bidding.findByIdAndUpdate(id,data,{
+  republishingItem = await Bidding.findByIdAndUpdate(id,data,{
     new: true,
     runValidators: true,
     useFindAndModify: false,
   });
-  const {createdBy} = republishItem;
+  const {createdBy} = republishingItem;
   if(!createdBy){
     return next(new errorHandler("creator of item not found",404));
   }
@@ -204,7 +213,7 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: `Item republished and will be active on ${req.body.startTime}`,
-    republishItem,
+    republishingItem,
     createdBy,
   })
 });
