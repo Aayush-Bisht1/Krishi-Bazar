@@ -3,6 +3,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import errorHandler from "../middlewares/error.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import { User } from "../models/userSchema.js";
 
 export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -143,6 +144,67 @@ export const getMyBiddingItems = catchAsyncErrors(async (req, res, next) => {
   })
 });
 
+export const removeFromBidding = catchAsyncErrors(async (req, res, next) => {
+  const {id} = req.params;
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return next(new errorHandler("Invalid Id",400));
+  }
+  const item = await Bidding.findById(id);
+  if(!item){
+    return next(new errorHandler("Item not found",404));
+  }
+  await item.deleteOne();
+  res.status(200).json({
+    success: true,
+    message: "Item removed from bidding",
+  })
+});
 
-export const removeFromBidding = catchAsyncErrors(async (req, res, next) => {});
-export const republishItem = catchAsyncErrors(async (req, res, next) => {});
+export const republishItem = catchAsyncErrors(async (req, res, next) => {
+  const {id} = req.params;
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return next(new errorHandler("Invalid Id",400));
+  }
+  let republishItem = await Bidding.findById(id);
+  if(!republishItem){
+    return next(new errorHandler("Item not found",404));
+  }
+  if(!req.body.startTime || !req.body.endTime){
+    return next(new errorHandler("Please provide start and end time",400));
+  }
+  if(new Date(republishItem.endTime) > Date.now()){
+    return next(new errorHandler("Item is not expired, cannot republish",400));
+  }
+  let data = {
+    startTime: new Date(req.body.startTime),
+    endTime: new Date(req.body.endTime),
+  };
+  if(data.startTime < Date.now()){
+    return next(new errorHandler("Start time cannot be in the past",400));
+  }
+  if(data.startTime >= data.endTime){
+    return next(new errorHandler("Start time must be less than end time",400));
+  }  
+  data.bids = [];
+  data.commissionCalculated = false; 
+  republishItem = await Bidding.findByIdAndUpdate(id,data,{
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  const {createdBy} = republishItem;
+  if(!createdBy){
+    return next(new errorHandler("creator of item not found",404));
+  }
+  await User.findByIdAndUpdate(createdBy,{unpaidCommission: 0},{
+    new: true,
+    runValidators: true,
+    useFindAndModify: false, 
+  })
+  res.status(200).json({
+    success: true,
+    message: `Item republished and will be active on ${req.body.startTime}`,
+    republishItem,
+    createdBy,
+  })
+});
