@@ -1,4 +1,5 @@
 import { Bidding } from "../models/biddingSchema.js";
+import {Bid} from "../models/bidSchema.js"
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import errorHandler from "../middlewares/error.js";
 import { v2 as cloudinary } from "cloudinary";
@@ -201,6 +202,7 @@ export const republishItem = catchAsyncErrors(async (req, res, next) => {
     runValidators: true,
     useFindAndModify: false,
   });
+  await Bid.deleteMany({biddingItem: republishingItem._id});
   const {createdBy} = republishingItem;
   if(!createdBy){
     return next(new errorHandler("creator of item not found",404));
