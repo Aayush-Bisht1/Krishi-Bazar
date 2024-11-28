@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { Bidding } from "../models/biddingSchema.js";
 import { User } from "../models/userSchema.js";
-import { calculateCommission } from "./commissionController.js";
+import { calculateCommission } from "../controllers/commissionController.js";
 import { Bid } from "../models/bidSchema.js";
 import {sendEmail} from "../utils/sendEmail.js"
 

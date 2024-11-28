@@ -11,6 +11,8 @@ import biddingItemRouter from "./router/biddingItemRoutes.js"
 import bidRouter from "./router/bidRoutes.js"
 import commissionRouter from "./router/commissionRoutes.js"
 import superAdminRouter from "./router/superAdminRoutes.js"
+import {endedBiddingCron} from "./automation/endedBiddingCron.js"
+import {verifyCommissionCron} from "./automation/verifyCommissionCron.js"
 
 dotenv.config();
 
@@ -43,6 +45,9 @@ app.use("/api/v1/bid",bidRouter);
 app.use("/api/v1/commission",commissionRouter);
 app.use("/api/v1/superadmin",superAdminRouter);
 
+
+endedBiddingCron();
+verifyCommissionCron();
 connectDB();
 app.use(errorMiddleware);
 

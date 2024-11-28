@@ -56,8 +56,6 @@ export const proofOfCommission = catchAsyncErrors(async (req, res, next) => {
         },
         userId: req.user._id
     });
-    user.unpaidCommission -= amount;
-    await user.save();
     res.status(200).json({
         success: true,
         message: "Commission proof uploaded successfully. We will review it and respond you within 24 hours",
