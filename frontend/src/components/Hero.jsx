@@ -1,10 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import img from './assets/Hero-Tractor.jpg';
 import mobileimg from './assets/mobile-tractor-hero.jpeg';
 import logo from './assets/logo2.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '@/store/slices/userSlice';
+import { ImCancelCircle } from "react-icons/im";
+import { RiAuctionFill } from "react-icons/ri";
 
 function Hero() {
+  const [show, setShow] = useState(false);
+  const {isAuthenticated} = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  }
   return (
     <div className="relative h-screen">
       {/* Background Image */}
@@ -20,13 +30,7 @@ function Hero() {
           <img
             src={mobileimg}
             alt="mobile-img"
-            placeholder="blur"
-            layout="fill"
-            quality={75}
-            objectFit="cover"
-            objectPosition="center"
-            className="saturate-125"
-            style={{ backgroundImage: 'linear-gradient(rgba(8,8,37,0.85),rgba(0,15,80,0.675))' }}
+            className="h-full w-full object-cover "
           />
         </div>
       </div>
@@ -35,17 +39,17 @@ function Hero() {
       <div className="relative z-10 flex h-16 items-center justify-between max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
           <img src={logo} alt="logo" width={40} height={40} className="rounded-full" />
-          <h1 className="text-3xl font-extrabold text-gray-800 font-verdana pl-2.5">KrishiBazar</h1>
+          <h1 className="text-3xl font-extrabold text-gray-800 font-verdana pl-2.5 ">KrishiBazar</h1>
         </div>
 
         <div className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-black text-l font-bold transition hover:text-slate-300">HOME</Link>
-          <Link href="#" className="text-black text-l font-bold transition hover:text-slate-300">WORKING</Link>
-          <Link href="/buy-sell" className="text-black text-l font-bold transition hover:text-slate-300">BUY/SELL</Link>
-          <Link href="#" className="text-black text-l font-bold transition hover:text-slate-300">CONTRACT</Link>
-          <Link href="#" className="text-black text-l font-bold transition hover:text-slate-300 ml-10">NEWS</Link>
-          <Link href="#" className="text-black text-l font-bold transition hover:text-slate-300">CHARTS</Link>
-          <Link href="#" className="text-black text-l font-bold transition hover:text-slate-300">CHATROOM</Link>
+          <Link to={"/"}  className="text-black text-l font-bold transition hover:text-slate-700">HOME</Link>
+          <Link to={"/working"} className="text-black text-l font-bold transition hover:text-slate-700">WORKING</Link>
+          <Link to={"/bidding"} className="text-black text-l font-bold transition hover:text-slate-700 flex items-center gap-1"> <RiAuctionFill className='text-xl'/> BIDDING</Link>
+          <Link to={"/contract"} className="text-black text-l font-bold transition hover:text-slate-700">CONTRACT</Link>
+          <Link to={"/news"} className="text-black text-l font-bold transition hover:text-slate-700 ml-10">NEWS</Link>
+          <Link to={"/charts"} className="text-black text-l font-bold transition hover:text-slate-700">CHARTS</Link>
+          <Link href="#" className="text-black text-l font-bold transition hover:text-slate-700">CHATROOM</Link>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -55,7 +59,8 @@ function Hero() {
           <Link href="/signup" className="hidden sm:block bg-gray-100 text-teal-600 font-medium px-5 py-2.5 rounded-md transition hover:text-teal-600/25">
             Register
           </Link>
-          <button className="md:hidden block p-2.5 text-gray-600 bg-gray-100 rounded">
+          <button className="md:hidden block p-2.5 text-gray-600 bg-gray-100 rounded"
+            onClick={()=>setShow(!show)}>
             <span className="sr-only">Toggle menu</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -69,10 +74,19 @@ function Hero() {
             </svg>
           </button>
         </div>
+        {
+            show ? 
+            <div className='w-[100%] bg-[#f6f4f0] h-screen fixed top-0 left-0 transition-all duration-100 flex flex-col justify-between lg:left-0'>
+              <button onClick={()=>setShow(!show)} className='absolute top-5 right-5 text-3xl'>
+                <ImCancelCircle/>
+              </button>
+            </div> 
+            : <></>
+          }
       </div>
 
       {/* Contract and Farming Text */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-center z-10">
+      <div className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 text-center z-10 ${show ? 'hidden' : ''}`}>
         <h1
           className="uppercase font-black text-5xl md:text-9xl text-white drop-shadow-[4px_7px_var(--tw-shadow-color)] shadow-gray-500"
           style={{
@@ -94,7 +108,7 @@ function Hero() {
           farming
         </h1>
       </div>
-    </div>
+    </div>  
   );
 }
 
