@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import {BrowserRouter as Router, Route,Routes} from "react-router-dom"
-import Hero from './components/Hero'
-import Workflow from './components/Workflow'
-import Footer from './components/Footer'
+import LandingPage from './components/LandingPage'
+import FarmerDashBoard from './components/FarmerDashBoard'
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<><Hero/><Workflow/><Footer/></>}/> 
+        <Route path="/" element={<LandingPage/>}/> 
+        <Route path="/farmer" element={<FarmerDashBoard/>}/> 
       </Routes>
     </Router>
   )
