@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Bell, Menu, X, ChevronRight, Tractor, Hammer, Users, ShoppingBag } from 'lucide-react';
 import logo from "./assets/logo2.png";
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -40,19 +42,21 @@ const LandingPage = () => {
         </div>
         
         <div className="space-y-4">
-          <div className="border rounded-lg p-4 hover:border-green-500 cursor-pointer transition-colors">
+          <div className="border rounded-lg p-4 hover:border-green-500 cursor-pointer transition-colors"
+          onClick={() => navigate('/signup/farmer') } >
             <h3 className="font-semibold text-lg mb-2">I'm a Farmer</h3>
             <p className="text-gray-600 text-sm">List your produce and connect with buyers</p>
           </div>
           
-          <div className="border rounded-lg p-4 hover:border-green-500 cursor-pointer transition-colors">
+          <div className="border rounded-lg p-4 hover:border-green-500 cursor-pointer transition-colors"
+          onClick={() => navigate('/signup/buyer')}>
             <h3 className="font-semibold text-lg mb-2">I'm a Buyer</h3>
             <p className="text-gray-600 text-sm">Find and bid on quality agricultural products</p>
           </div>
 
           <div className="mt-6 text-center text-sm text-gray-600">
             Already have an account? 
-            <button className="text-green-600 font-semibold ml-2">Login</button>
+            <button className="text-green-600 font-semibold ml-2" onClick={() => navigate('/login')} >Login</button>
           </div>
         </div>
       </div>
