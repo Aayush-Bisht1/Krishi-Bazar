@@ -57,7 +57,7 @@ const BuyerDashBoard = () => {
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Buyer Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 pt-5">Buyer Dashboard</h1>
       
       <Tabs defaultValue="marketplace" className="space-y-4">
         <TabsList className="grid grid-cols-3 gap-4">

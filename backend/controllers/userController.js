@@ -14,13 +14,13 @@ export const register = catchAsyncErrors(async (req,res,next) => {
         return next(new errorHandler("Invalid Image Format", 400)); 
     }
     
-    const {userName, email, password, address, phoneNo, bankAccountNumber,bankAccountType, bankName, razorPayId, role} = req.body;
+    const {userName, email, password, address, phoneNo, bankAccountNumber,bankAccountName, bankName, razorPayId, role} = req.body;
 
     if(!userName || !email || !password || !address || !phoneNo || !role){
         return next(new errorHandler("Please fill all the fields", 400));
     }
     if(role === "farmer"){
-        if(!bankAccountNumber || !bankAccountType || !bankName){
+        if(!bankAccountNumber || !bankAccountName || !bankName){
             return next(new errorHandler("Please provide your bank details", 400));
         }
         if(!razorPayId){
@@ -60,7 +60,7 @@ export const register = catchAsyncErrors(async (req,res,next) => {
         paymentMethods: {
             bankTransfer: {
                 bankAccountNumber,
-                bankAccountType,
+                bankAccountName,
                 bankName
             },
             razorPay: {

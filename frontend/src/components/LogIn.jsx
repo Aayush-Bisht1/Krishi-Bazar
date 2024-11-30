@@ -1,81 +1,58 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/store/slices/userSlice";
 
 const LogIn = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
-  
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Store the token and user role from backend response
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userRole', data.role);
-        
-        // Redirect based on role from backend
-        if (data.role === 'farmer') {
-          navigate('/farmer/dashboard');
-        } else {
-          navigate('/buyer/dashboard');
-        }
-      } else {
-        setError(data.message || 'Invalid email or password');
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    const formdata = new FormData();
+    formdata.append("email", formData.email);
+    formdata.append("password", formData.password);
+    dispatch(login(formData));
   };
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(`/${user.role}/dashboard`);
+    }
+   },[isAuthenticated,navigate,user]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Welcome Back
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -106,37 +83,28 @@ const LogIn = () => {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
-                </>
-              ) : (
-                'Login'
-              )}
+            <Button type="submit" className="w-full" disabled={loading} >
+              {
+                loading ? "Logging In ..." : "Login"
+              }
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-center text-gray-500">
-            Don't have an account yet? 
+            Don't have an account yet?
           </div>
           <div className="flex gap-4 justify-center w-full">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/signup/farmer')}
+            <Button
+              variant="outline"
+              onClick={() => navigate("/signup/farmer")}
               className="w-1/2"
             >
               Sign Up as Farmer
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/signup/buyer')}
+            <Button
+              variant="outline"
+              onClick={() => navigate("/signup/buyer")}
               className="w-1/2"
             >
               Sign Up as Buyer

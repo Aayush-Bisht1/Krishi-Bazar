@@ -10,22 +10,22 @@ const userSlice = createSlice({
     user: {},
   },
   reducers: {
-    registerRequest(state, action) {
+    signupRequest(state) {
       state.loading = true;
       state.isAuthenticated = false;
       state.user = {};
     },
-    registerSuccess(state, action) {
+    signupSuccess(state, action) {
       state.loading = false;
       state.isAuthenticated = true;
       state.user = action.payload.user;
     },
-    registerFailed(state, action) {
+    signupFailed(state) {
       state.loading = false;
       state.isAuthenticated = false;
       state.user = {};
     },
-    loginRequest(state, action) {
+    loginRequest(state) {
       state.loading = true;
       state.isAuthenticated = false;
       state.user = {};
@@ -35,21 +35,16 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload.user;
     },
-    loginFailed(state, action) {
+    loginFailed(state) {
       state.loading = false;
       state.isAuthenticated = false;
       state.user = {};
     },
-    logoutSuccess(state, action) {
+    logoutSuccess(state) {
       state.isAuthenticated = false;
       state.user = {};
     },
-    logoutFailed(state, action) {
-      state.loading = false;
-      state.isAuthenticated = state.isAuthenticated;
-      state.user = state.user;
-    },
-    clearAllErrors(state, action) {
+    logoutFailed(state) {
       state.loading = false;
       state.isAuthenticated = state.isAuthenticated;
       state.user = state.user;
@@ -57,41 +52,52 @@ const userSlice = createSlice({
   },
 });
 
-export const register = (formData) => async (dispatch) => {
-    dispatch(userSlice.actions.registerRequest());
-    try {
-      // Validate required fields before making the request
-      if (!formData.get('userName') || !formData.get('email') || !formData.get('password') || 
-          !formData.get('address') || !formData.get('phoneNo') || !formData.get('role') || 
-          !formData.get('profileImage')) {
-        throw new Error('Please fill all required fields');
+export const signup = (data) => async (dispatch) => {
+  dispatch(userSlice.actions.signupRequest());
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/v1/user/register",
+      data,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       }
-  
-      // Additional validation for farmer role
-      if (formData.get('role') === 'farmer') {
-        if (!formData.get('bankAccountNumber') || !formData.get('bankAccountName') || 
-            !formData.get('bankName') || !formData.get('razorPayId')) {
-          throw new Error('Please fill all bank details for farmer registration');
-        }
-      }
-  
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/user/register",
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-  
-      dispatch(userSlice.actions.registerSuccess(response.data));
-      toast.success(response.data.message);
-    } catch (error) {
-      dispatch(userSlice.actions.registerFailed());
-      const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
-      toast.error(errorMessage);
+    );
+    if (response.data && response.data.user) {
+      dispatch(userSlice.actions.signupSuccess(response.data));
+      toast.success(response.data.message || "SignUp successful");
+    } else {
+      throw new Error("Invalid response from server");
     }
-  };
+  } catch (error) {
+    dispatch(userSlice.actions.signupFailed());
+    toast.error(error.response?.data?.message || "SignUp failed");
+
+  }
+};
+
+export const login = (data) => async (dispatch) => {
+  dispatch(userSlice.actions.loginRequest());
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/v1/user/login",
+      data,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    if (response.data && response.data.user) {
+      dispatch(userSlice.actions.loginSuccess(response.data));
+      toast.success(response.data.message || "Login successful");
+    } else {
+      throw new Error("Invalid response from server");
+    }
+  } catch (error) {
+    dispatch(userSlice.actions.loginFailed());
+    toast.error(error.response?.data?.message || "Login failed");
+  }
+};
 export const logout = () => async (dispatch) => {
   try {
     const response = await axios.get(

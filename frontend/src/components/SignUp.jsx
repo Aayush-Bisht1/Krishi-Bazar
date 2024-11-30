@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Camera } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { register } from "@/store/slices/userSlice";
+import { signup } from "@/store/slices/userSlice";
 
 const SignUp = () => {
   const { text } = useParams();
@@ -70,14 +70,14 @@ const SignUp = () => {
       formdata.append("bankName", formData.bankName);
       formdata.append("razorPayId", formData.razorPayId);
     }
-    dispatch(register(formdata));
+    dispatch(signup(formdata));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate(`/${formData.role}/dashboard`);
     }
-  }, [dispatch, isAuthenticated, loading]);
+  }, [isAuthenticated, navigate, formData.role]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
