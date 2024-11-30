@@ -3,31 +3,25 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Camera } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { register } from "@/store/slices/userSlice";
 
 const SignUp = () => {
   const { text } = useParams();
   const [formData, setFormData] = useState({
-    username: "",
+    userName: "",
     password: "",
     email: "",
     address: "",
-    phone: "",
+    phoneNo: "",
     profileImage: null,
-    accNo: "",
-    accName: "",
+    role: text || "",
+    bankAccountNumber: "",
+    bankAccountName: "",
     bankName: "",
-    razorpayId: "",
+    razorPayId: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -48,33 +42,42 @@ const SignUp = () => {
         profileImage: file,
       }));
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload=()=>{ 
+      reader.onload = () => {
         setImagePreview(reader.result);
-      }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleRoleChange = (value) => {
-    setFormData((prev) => ({
-      ...prev,
-      role: value,
-    }));
-  };
+  const navigate = useNavigate();
 
-  const {isAuthenticated,loading} = useSelector(state => state.user);
+  const { isAuthenticated, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(register(formData));
+    let formdata = new FormData();
+    formdata.append("userName", formData.userName);
+    formdata.append("password", formData.password);
+    formdata.append("email", formData.email); 
+    formdata.append("address", formData.address);
+    formdata.append("phoneNo", formData.phoneNo);
+    formdata.append("role", formData.role);
+    formdata.append("profileImage", formData.profileImage);
+    if (formData.role === "farmer") {
+      formdata.append("bankAccountNumber", formData.bankAccountNumber);
+      formdata.append("bankAccountName", formData.bankAccountName);
+      formdata.append("bankName", formData.bankName);
+      formdata.append("razorPayId", formData.razorPayId);
+    }
+    dispatch(register(formdata));
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(`/${text}/dashboard`);
+      navigate(`/${formData.role}/dashboard`);
     }
-  }, [dispatch,text,isAuthenticated,loading]);
+  }, [dispatch, isAuthenticated, loading]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -105,6 +108,7 @@ const SignUp = () => {
                   accept="image/*"
                   onChange={handleImageChange}
                   className="absolute inset-0 opacity-0 cursor-pointer"
+                  required
                 />
               </div>
               <span className="text-sm text-gray-500">
@@ -118,8 +122,8 @@ const SignUp = () => {
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  name="username"
-                  value={formData.username}
+                  name="userName"
+                  value={formData.userName}
                   onChange={handleInputChange}
                   required
                 />
@@ -150,12 +154,12 @@ const SignUp = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phoneNo">Phone Number</Label>
                 <Input
-                  id="phone"
-                  name="phone"
+                  id="phoneNo"
+                  name="phoneNo"
                   type="tel"
-                  value={formData.phone}
+                  value={formData.phoneNo}
                   onChange={handleInputChange}
                   required
                 />
@@ -174,21 +178,31 @@ const SignUp = () => {
 
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="role">Role</Label>
-                <Input value={text} className="cursor-not-allowed bg-gray-200" />
+                <Input
+                  id="role"
+                  placeholder={text}
+                  defaultValue={formData.role}
+                  name="role"
+                  className="cursor-not-allowed bg-gray-200"
+                  readOnly
+                />
               </div>
             </div>
 
             {/* Conditional Farmer Fields */}
             {text === "farmer" && (
               <div className="space-y-6 border-t pt-6">
-                <h3 className="text-lg font-semibold">Payment Information</h3>
+                <h3 className="text-lg font-semibold">
+                  Payment Method Details
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="accNo">Account Number</Label>
                     <Input
                       id="accNo"
-                      name="accNo"
-                      value={formData.accNo}
+                      name="bankAccountNumber"
+                      placeholder="IFSC"
+                      value={formData.bankAccountNumber}
                       onChange={handleInputChange}
                       required
                     />
@@ -198,8 +212,8 @@ const SignUp = () => {
                     <Label htmlFor="accName">Account Holder Name</Label>
                     <Input
                       id="accName"
-                      name="accName"
-                      value={formData.accName}
+                      name="bankAccountName"
+                      value={formData.bankAccountName}
                       onChange={handleInputChange}
                       required
                     />
@@ -220,8 +234,8 @@ const SignUp = () => {
                     <Label htmlFor="razorpayId">Razorpay ID</Label>
                     <Input
                       id="razorpayId"
-                      name="razorpayId"
-                      value={formData.razorpayId}
+                      name="razorPayId"
+                      value={formData.razorPayId}
                       onChange={handleInputChange}
                       required
                     />
@@ -231,7 +245,8 @@ const SignUp = () => {
             )}
 
             <Button type="submit" className="w-full">
-              Sign Up
+              {loading && "Signing Up..."}
+              {!loading && "Sign Up"}
             </Button>
           </form>
         </CardContent>

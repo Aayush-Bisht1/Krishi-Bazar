@@ -19,7 +19,7 @@ export const register = catchAsyncErrors(async (req,res,next) => {
     if(!userName || !email || !password || !address || !phoneNo || !role){
         return next(new errorHandler("Please fill all the fields", 400));
     }
-    if(role === "Farmer"){
+    if(role === "farmer"){
         if(!bankAccountNumber || !bankAccountType || !bankName){
             return next(new errorHandler("Please provide your bank details", 400));
         }
@@ -68,6 +68,7 @@ export const register = catchAsyncErrors(async (req,res,next) => {
             }
         },
     });
+    console.log(user);
 
     generateToken(user,"User Registered",201,res);
 });

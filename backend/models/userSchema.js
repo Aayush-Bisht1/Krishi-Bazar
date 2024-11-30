@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     paymentMethods: {
         bankTransfer: {
             bankAccountNumber: String,
-            bankAccountType: String,
+            bankAccountName: String,
             bankName: String
         },
         razorPay: {
