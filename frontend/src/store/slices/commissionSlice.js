@@ -1,38 +1,37 @@
-import { toast } from "react-toastify";
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const commissionSlice = createSlice({
   name: "commission",
   initialState: {
     loading: false,
-    commissions: [],
   },
   reducers: {
-    postCommissionProofRequest(state) {
+    postCommissionProofRequest(state, action) {
       state.loading = true;
     },
     postCommissionProofSuccess(state, action) {
       state.loading = false;
-      state.commissions = action.payload.commissions;
     },
-    postCommissionProofFailed(state) {
+    postCommissionProofFailed(state, action) {
       state.loading = false;
     },
   },
 });
 
 export const postCommissionProof = (data) => async (dispatch) => {
+  dispatch(commissionSlice.actions.postCommissionProofRequest());
   try {
-    dispatch(commissionSlice.actions.postCommissionProofRequest());
     const response = await axios.post(
-      "http://localhost:5000/api/v1/commission-proof",
-      {},
+      "http://localhost:5000/api/v1/commission/proof",
+      data,
       {
         withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
       }
     );
-    dispatch(commissionSlice.actions.postCommissionProofSuccess(response.data));
+    dispatch(commissionSlice.actions.postCommissionProofSuccess());
     toast.success(response.data.message);
   } catch (error) {
     dispatch(commissionSlice.actions.postCommissionProofFailed());

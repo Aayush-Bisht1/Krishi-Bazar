@@ -2,12 +2,12 @@ import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LandingPage from "./components/LandingPage";
-import FarmerDashBoard from "./components/FarmerDashBoard";
-import BuyerDashBoard from "./components/BuyerDashBoard";
-import SuperAdminDashBoard from "./components/SuperAdminDashBoard";
-import SignUp from "./components/SignUp";
-import LogIn from "./components/LogIn";
+import LandingPage from "./pages/LandingPage";
+import FarmerDashBoard from "./pages/FarmerDashBoard";
+import BuyerDashBoard from "./pages/BuyerDashBoard";
+import SuperAdminDashBoard from "./pages/SuperAdminDashBoard";
+import SignUp from "./pages/SignUp";
+import LogIn from "./pages/LogIn";
 function App() {
   return (
     <Router>

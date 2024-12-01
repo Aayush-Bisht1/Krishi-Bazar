@@ -49,6 +49,21 @@ const userSlice = createSlice({
       state.isAuthenticated = state.isAuthenticated;
       state.user = state.user;
     },
+    fetchUserRequest(state) {
+      state.loading = true;
+      state.isAuthenticated = false;
+      state.user = {};
+    },
+    fetchUserSuccess(state, action) {
+      state.loading = false;
+      state.isAuthenticated = true;
+      state.user = action.payload;
+    },
+    fetchUserFailed(state) {
+      state.loading = false;
+      state.isAuthenticated = false;
+      state.user = {};
+    },
   },
 });
 
@@ -102,15 +117,33 @@ export const logout = () => async (dispatch) => {
   try {
     const response = await axios.get(
       "http://localhost:5000/api/v1/user/logout",
-      { withCredentials: true }
+      { 
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+       }
     );
     dispatch(userSlice.actions.logoutSuccess());
-    toast.success(response.data.message);
-    dispatch(userSlice.actions.clearAllErrors());
+    toast.success(response.data.message || "Logout successful");
   } catch (error) {
     dispatch(userSlice.actions.logoutFailed());
-    toast.error(error.response.data.message);
-    dispatch(userSlice.actions.clearAllErrors());
+    toast.error(error.response.data.message || "Logout failed");
+  }
+};
+export const fetchUser = () => async (dispatch) => {
+  dispatch(userSlice.actions.fetchUserRequest());
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/v1/user/logout",
+      { 
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+       }
+    );
+    dispatch(userSlice.actions.fetchUserSuccess());
+    toast.success(response.data.message || "Logout successful");
+  } catch (error) {
+    dispatch(userSlice.actions.fetchUserFailed());
+    toast.error(error.response.data.message || "Logout failed");
   }
 };
 

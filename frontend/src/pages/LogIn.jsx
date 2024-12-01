@@ -35,7 +35,7 @@ const LogIn = () => {
     const formdata = new FormData();
     formdata.append("email", formData.email);
     formdata.append("password", formData.password);
-    dispatch(login(formData));
+    dispatch(login(formdata));
   };
   useEffect(() => {
     if (isAuthenticated) {

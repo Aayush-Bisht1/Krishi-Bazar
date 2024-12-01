@@ -22,6 +22,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PlusCircle, Package, Gavel, DollarSign, List } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/store/slices/userSlice";
+import SubmitCommission from "@/components/SubmitCommission";
 const FarmerDashBoard = () => {
   const [productForm, setProductForm] = useState({
     name: "",
@@ -58,10 +61,18 @@ const FarmerDashBoard = () => {
       status: "Pending",
     },
   ]);
+  const {isAuthenticated} = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  }
 
   return (
     <div className="p-4 max-w-6xl mx-auto ">
+      <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold mb-6 pt-5">Farmer Dashboard</h1>
+      <Button onClick={handleLogout}>Logout</Button>
+      </div>
 
       <Tabs defaultValue="products" className="space-y-4">
         <TabsList className="grid grid-cols-4 gap-4">
@@ -75,7 +86,7 @@ const FarmerDashBoard = () => {
           </TabsTrigger>
           <TabsTrigger value="commission" className="flex items-center gap-2">
             <DollarSign size={16} />
-            Commission
+            Submit Commission
           </TabsTrigger>
           <TabsTrigger value="auctions" className="flex items-center gap-2">
             <List size={16} />
@@ -264,28 +275,7 @@ const FarmerDashBoard = () => {
         </TabsContent>
 
         <TabsContent value="commission">
-          <Card>
-            <CardHeader>
-              <CardTitle>Commission Details</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 border rounded-lg">
-                    <h3 className="font-medium mb-2">
-                      Current Commission Rate
-                    </h3>
-                    <p className="text-2xl font-bold">2.5%</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h3 className="font-medium mb-2">Total Commission Paid</h3>
-                    <p className="text-2xl font-bold">₹12,500</p>
-                  </div>
-                </div>
-                <Button className="w-full">View Commission History</Button>
-              </div>
-            </CardContent>
-          </Card>
+          <SubmitCommission/>
         </TabsContent>
 
         <TabsContent value="auctions">
