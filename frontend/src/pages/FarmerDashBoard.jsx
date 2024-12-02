@@ -1,13 +1,4 @@
 import React, { useState } from "react";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -25,6 +16,7 @@ import { PlusCircle, Package, Gavel, DollarSign, List } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/userSlice";
 import SubmitCommission from "@/components/SubmitCommission";
+import CreateBidding from "@/components/CreateBidding";
 const FarmerDashBoard = () => {
   const [productForm, setProductForm] = useState({
     name: "",
@@ -33,16 +25,6 @@ const FarmerDashBoard = () => {
     price: "",
     description: "",
     type: "yield", // or 'contract'
-  });
-
-  const [biddingForm, setBiddingForm] = useState({
-    product: "",
-    startPrice: "",
-    minIncrement: "",
-    condition: "",
-    startTime: new Date(),
-    endTime: new Date(),
-    description: "",
   });
 
   const [myAuctions] = useState([
@@ -71,7 +53,8 @@ const FarmerDashBoard = () => {
     <div className="p-4 max-w-6xl mx-auto ">
       <div className="flex items-center justify-between">
       <h1 className="text-3xl font-bold mb-6 pt-5">Farmer Dashboard</h1>
-      <Button onClick={handleLogout}>Logout</Button>
+      <Button onClick={isAuthenticated? handleLogout : () => navigate('/login')}>
+        {isAuthenticated ? "Logout" : "Login"}</Button>
       </div>
 
       <Tabs defaultValue="products" className="space-y-4">
@@ -156,122 +139,7 @@ const FarmerDashBoard = () => {
         </TabsContent>
 
         <TabsContent value="bidding">
-          <Card>
-            <CardHeader>
-              <CardTitle>Create New Bidding</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Select Product</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose product" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="wheat">Organic Wheat</SelectItem>
-                        <SelectItem value="rice">Rice Contract</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Starting Price (₹)</Label>
-                    <Input type="number" placeholder="Enter starting price" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Minimum Bid Increment (₹)</Label>
-                    <Input
-                      type="number"
-                      placeholder="Enter minimum increment"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Condition of Product</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose condition" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fair">Fair</SelectItem>
-                        <SelectItem value="good">Good</SelectItem>
-                        <SelectItem value="excellent">Excellent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2 flex items-center gap-4">
-                    <Label>Start Time</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[280px] justify-start text-left font-normal",
-                            !biddingForm.startTime && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon />
-                          {biddingForm.startTime ? (
-                            format(biddingForm.startTime, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={biddingForm.startTime}
-                          onSelect={(date)=> setBiddingForm((prev)=>({
-                            ...prev,
-                            startTime: date
-                          }))}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <div className="space-y-2 flex items-center gap-4">
-                    <Label>End Time</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[280px] justify-start text-left font-normal",
-                            !biddingForm.endTime && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon />
-                          {biddingForm.endTime ? (
-                            format(biddingForm.endTime, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={biddingForm.endTime}
-                          onSelect={(date) => setBiddingForm((prev) => ({
-                            ...prev,
-                            endTime: date
-                          })) }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>Additional Details</Label>
-                  <Textarea placeholder="Enter any additional details for bidders" />
-                </div>
-                <Button className="w-full">Create Bidding</Button>
-              </form>
-            </CardContent>
-          </Card>
+          <CreateBidding/>
         </TabsContent>
 
         <TabsContent value="commission">

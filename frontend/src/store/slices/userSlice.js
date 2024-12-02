@@ -133,17 +133,16 @@ export const fetchUser = () => async (dispatch) => {
   dispatch(userSlice.actions.fetchUserRequest());
   try {
     const response = await axios.get(
-      "http://localhost:5000/api/v1/user/logout",
+      "http://localhost:5000/api/v1/user/profile",
       { 
         withCredentials: true,
         headers: { "Content-Type": "application/json" },
        }
     );
-    dispatch(userSlice.actions.fetchUserSuccess());
-    toast.success(response.data.message || "Logout successful");
-  } catch (error) {
+    dispatch(userSlice.actions.fetchUserSuccess(response.data.user));
+   } catch (error) {
     dispatch(userSlice.actions.fetchUserFailed());
-    toast.error(error.response.data.message || "Logout failed");
+    toast.error(error.response.data.message || "Failed to fetch user");
   }
 };
 
