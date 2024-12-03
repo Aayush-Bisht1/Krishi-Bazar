@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { CalendarIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import format from "date-fns/format"
+import { useDispatch, useSelector } from "react-redux";
 const CreateBidding = () => {
   const [biddingForm, setBiddingForm] = useState({
     product: "",
@@ -30,6 +31,8 @@ const CreateBidding = () => {
     endTime: new Date(),
     description: "",
   });
+  const {loading, allBiddingItems} = useSelector((state) => state.bidding);
+  const dispatch = useDispatch();
   const calculateTimeLeft = () => {
     const now = new Date();
     const startDifference = biddingForm.startTime - now;

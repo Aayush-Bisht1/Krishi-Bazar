@@ -5,6 +5,6 @@ import { isAuthenticated, isAuthorized } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.post("/placebid/:id", isAuthenticated, isAuthorized("Buyer"), placeBid);
+router.post("/placebid/:id", isAuthenticated, isAuthorized("buyer"), placeBid);
 
 export default router;

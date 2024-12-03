@@ -16,7 +16,7 @@ import { PlusCircle, Package, Gavel, DollarSign, List } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/userSlice";
 import SubmitCommission from "@/components/SubmitCommission";
-import CreateBidding from "@/components/CreateBidding";
+import CreateBidding from "@/components/MarketPlace";
 const FarmerDashBoard = () => {
   const [productForm, setProductForm] = useState({
     name: "",

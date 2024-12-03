@@ -132,14 +132,14 @@ const LandingPage = () => {
                 How it Works
               </a>
               <a
-                href="#marketplace"
-                className="text-gray-600 hover:text-gray-900 cursor-pointerx"
+                onClick={() => navigate("/marketplace")}
+                className="text-gray-600 hover:text-gray-900 cursor-pointer"
               >
                 Marketplace
               </a>
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors "
               >
                 Get Started
               </button>

@@ -63,7 +63,7 @@ const userSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = false;
       state.user = {};
-    },
+    }
   },
 });
 
@@ -134,6 +134,23 @@ export const fetchUser = () => async (dispatch) => {
   try {
     const response = await axios.get(
       "http://localhost:5000/api/v1/user/profile",
+      { 
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+       }
+    );
+    dispatch(userSlice.actions.fetchUserSuccess(response.data.user));
+   } catch (error) {
+    dispatch(userSlice.actions.fetchUserFailed());
+    toast.error(error.response.data.message || "Failed to fetch user");
+  }
+};
+
+export const fetchUserById = (id) => async (dispatch) => {
+  dispatch(userSlice.actions.fetchUserRequest());
+  try {
+    const response = await axios.get(
+      `http://localhost:5000/api/v1/user/createdBy/${id}`,
       { 
         withCredentials: true,
         headers: { "Content-Type": "application/json" },

@@ -1,70 +1,64 @@
 import mongoose from "mongoose";
 
 const biddingSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    startingBid: Number,
-    currentBid: {
-        type: Number,
-        default: 0
+  title: String,
+  description: String,
+  startingBid: Number,
+  currentBid: {
+    type: Number,
+    default: 0,
+  },
+  category: String,
+  type: {
+    type: String,
+    enum: ["Yeild/Item", "Contract"],
+  },
+  location: String,
+  condition: {
+    type: String,
+    enum: ["Fair", "Good", "Excellent"],
+  },
+  quantity: String,
+  startTime: String,
+  endTime: String,
+  image: {
+    public_id: {
+      type: String,
+      required: true,
     },
-    category: String,
-    condition: {
-        type: String,
-        enum: ["Fair","Good","Excellent"]
+    url: {
+      type: String,
+      required: true,
     },
-    startTime: String,
-    endTime: String,
-    images: [
-        {
-            public_id: {
-                type: String,
-                required: true
-            },
-            url: {
-                type: String,
-                required: true
-            }
-        },
-        {
-            public_id: {
-                type: String,
-                required: true
-            },
-            url: {
-                type: String,
-                required: true
-            }
-        }  
-    ],
-    createdBy: {
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  bids: [
+    {
+      userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: "Bid",
+      },
+      userName: String,
+      profileImage: String,
+      bid: Number,
     },
-    bids: [
-        {
-            userId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Bid",
-            },
-            userName: String,
-            profileImage: String,
-            bid: Number
-        },
-    ],
-    highestBidder: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    },
-    commissionCalculated: {
-        type: Boolean,  
-        default: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-})
+  ],
+  highestBidder: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  commissionCalculated: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-export const Bidding = mongoose.model("Bidding",biddingSchema);
+export const Bidding = mongoose.model("Bidding", biddingSchema);

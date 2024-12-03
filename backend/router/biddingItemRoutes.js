@@ -5,12 +5,12 @@ import { addNewBiddingItem, getAllItems, getBiddingDetails, getMyBiddingItems, r
 
 const router = express.Router();
 
-router.post("/create",isAuthenticated, isAuthorized("Farmer"), trackCommissionStatus ,addNewBiddingItem);
+router.post("/create",isAuthenticated, isAuthorized("farmer"), trackCommissionStatus ,addNewBiddingItem);
 router.get("/allitems",isAuthenticated,getAllItems);
-router.get("/bidding/:id",isAuthenticated,getBiddingDetails);
-router.get("/myitems",isAuthenticated,isAuthorized("Farmer"),getMyBiddingItems);
-router.delete("/delete/:id",isAuthenticated, isAuthorized("Farmer") ,removeFromBidding);
-router.put("/item/republish/:id",isAuthenticated,isAuthorized("Farmer"), republishItem);
+router.get("/item/:id",isAuthenticated,getBiddingDetails);
+router.get("/myitems",isAuthenticated,isAuthorized("farmer"),getMyBiddingItems);
+router.delete("/delete/:id",isAuthenticated, isAuthorized("farmer") ,removeFromBidding);
+router.put("/item/republish/:id",isAuthenticated,isAuthorized("farmer"), republishItem);
 
 
 export default router; 

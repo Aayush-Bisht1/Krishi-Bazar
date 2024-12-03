@@ -3,6 +3,7 @@ import {User} from "../models/userSchema.js"
 import {v2 as cloudinary} from "cloudinary"
 import { generateToken } from "../utils/jwtToken.js";
 import {catchAsyncErrors} from "../middlewares/catchAsyncErrors.js"
+import mongoose from "mongoose";
 
 export const register = catchAsyncErrors(async (req,res,next) => {
     if(!req.files || Object.keys(req.files).length === 0){
@@ -117,5 +118,20 @@ export const fetchLeaderboard = catchAsyncErrors(async (req,res,next) => {
     res.status(200).json({
         success: true,
         leaderboard,
+    })
+});
+
+export const getUserById = catchAsyncErrors(async (req,res,next) => {
+    const {id} = req.params;
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return next(new errorHandler("Invalid Id",400));
+    }
+    const user = await User.findById(id);
+    if(!user){
+        return next(new errorHandler("User not found",404));
+    }
+    res.status(200).json({
+        success: true,
+        user,
     })
 });
