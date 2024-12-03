@@ -3,6 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, ShoppingBag, History, Timer, Star } from "lucide-react";
 import MarketPlace from "@/components/MarketPlace";
+import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const BuyerDashBoard = () => {
   const [myBids] = useState([
@@ -21,10 +25,23 @@ const BuyerDashBoard = () => {
       highestBid: "₹3000",
     },
   ]);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 pt-3">Buyer Dashboard</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold mb-6 pt-3">Buyer Dashboard</h1>
+        <Button
+          onClick={isAuthenticated ? handleLogout : () => navigate("/login")}
+        >
+          {isAuthenticated ? "Logout" : "Login"}
+        </Button>
+      </div>
 
       <Tabs defaultValue="marketplace" className="space-y-4">
         <TabsList className="grid grid-cols-3 gap-4">

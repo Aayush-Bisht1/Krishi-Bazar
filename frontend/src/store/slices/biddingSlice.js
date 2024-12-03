@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { get } from "axios";
 import { toast } from "react-toastify";
 
 const biddingSlice = createSlice({
@@ -9,7 +8,7 @@ const biddingSlice = createSlice({
     loading: false,
     itemDetails: {},
     biddingDetails: {},
-    biddingItemBidders: {},
+    biddingItemBidders: [],
     myBiddingItem: [],
     allBiddingItems: [],
   },
