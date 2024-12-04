@@ -55,6 +55,25 @@ const biddingSlice = createSlice({
       state.loading = false;
       state.myBiddingItems = [];
     },
+    deleteBiddingItemRequest(state, action) {
+      state.loading = true;
+    },
+    deleteBiddingItemSuccess(state, action) {
+      state.loading = false;
+    },
+    deleteBiddingItemFailed(state, action) {
+      state.loading = false;
+    },
+    republishBiddingItemRequest(state, action) {
+      state.loading = true;
+    },
+    republishBiddingItemSuccess(state, action) {
+      state.loading = false;
+    },
+    republishBiddingItemFailed(state, action) {
+      state.loading = false;
+    },
+    
     resetSlice(state, action) {
       state.loading = false;
       state.itemDetails = state.itemDetails;
@@ -138,6 +157,48 @@ export const getMyBiddingItems = () => async(dispatch) => {
     dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.getMyBiddingItemsFailed());
+    toast.error(error.response.data.message);
+    dispatch(biddingSlice.actions.resetSlice());
+  }
+}
+
+export const deleteBiddingItem = (id) => async (dispatch) => {
+  dispatch(biddingSlice.actions.deleteBiddingItemRequest());
+  try {
+    const response = await axios.delete(
+      `http://localhost:5000/api/v1/biddingitem/delete/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch(biddingSlice.actions.deleteBiddingItemSuccess());
+    toast.success(response.data.message);
+    dispatch(biddingSlice.actions.resetSlice());
+  } catch (error) {
+    dispatch(biddingSlice.actions.deleteBiddingItemFailed());
+    toast.error(error.response.data.message);
+    dispatch(biddingSlice.actions.resetSlice());
+  }
+};
+
+export const republishBiddingItem = (id,data) => async (dispatch) => {
+  dispatch(biddingSlice.actions.republishBiddingItemRequest());
+  try {
+    const response = await axios.post(
+      `http://localhost:5000/api/v1/biddingitem/item/republish/${id}`,
+      data,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    dispatch(biddingSlice.actions.republishBiddingItemSuccess());
+    toast.success(response.data.message);
+    dispatch(biddingSlice.actions.getAllBiddingItems());
+    dispatch(biddingSlice.actions.getMyBiddingItems());
+    dispatch(biddingSlice.actions.resetSlice());
+  } catch (error) {
+    dispatch(biddingSlice.actions.republishBiddingItemFailed());
     toast.error(error.response.data.message);
     dispatch(biddingSlice.actions.resetSlice());
   }
