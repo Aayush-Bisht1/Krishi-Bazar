@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import {  Gavel, DollarSign, List } from "lucide-react";
@@ -9,22 +8,6 @@ import SubmitCommission from "@/components/SubmitCommission";
 import CreateBidding from "@/components/CreateBidding";
 import ViewMyAuctions from "@/components/ViewMyAuctions";
 const FarmerDashBoard = () => {
-  const [myAuctions] = useState([
-    {
-      id: 1,
-      product: "Organic Wheat",
-      currentBid: "₹2500/quintal",
-      bids: 5,
-      status: "Active",
-    },
-    {
-      id: 2,
-      product: "Rice Contract",
-      currentBid: "₹3000/quintal",
-      bids: 3,
-      status: "Pending",
-    },
-  ]);
   const {isAuthenticated} = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleLogout = () => {

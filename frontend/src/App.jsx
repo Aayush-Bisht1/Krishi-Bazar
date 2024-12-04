@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,6 +13,7 @@ import { fetchUser } from "./store/slices/userSlice";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MarketPlace from "./components/MarketPlace";
 import BiddingItem from "./pages/biddingItem";
+import ViewBiddingDetails from "./pages/ViewBiddingDetails";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/marketplace" element={<MarketPlace />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/bidding/item/:id" element={<ProtectedRoute allowedRoles={["buyer"]}><BiddingItem /></ProtectedRoute>} />
+        <Route path="/bidding/details/:id" element={<ProtectedRoute allowedRoles={["farmer"]}><ViewBiddingDetails /></ProtectedRoute>} />
       </Routes>
       <ToastContainer position="top-right" />
     </Router>
