@@ -176,7 +176,7 @@ const LandingPage = () => {
                 How it Works
               </a>
               <a
-                href="#marketplace"
+                onClick={() => navigate("/marketplace")}
                 className="block px-3 py-2 text-gray-600 hover:text-gray-900 cursor-pointer"
               >
                 Marketplace

@@ -28,7 +28,7 @@ function App() {
         <Route path="/signup/:text" element={<SignUp />} />
         <Route path="/marketplace" element={<MarketPlace />} />
         <Route path="/login" element={<LogIn />} />
-        <Route path="/bidding/item/:id" element={<BiddingItem />} />
+        <Route path="/bidding/item/:id" element={<ProtectedRoute allowedRoles={["buyer"]}><BiddingItem /></ProtectedRoute>} />
       </Routes>
       <ToastContainer position="top-right" />
     </Router>

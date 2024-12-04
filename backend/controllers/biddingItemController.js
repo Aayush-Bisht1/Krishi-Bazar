@@ -25,6 +25,7 @@ export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
     condition,
     location,
     quantity,
+    unit,
     type,
   } = req.body;
   if (
@@ -37,6 +38,7 @@ export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
     !condition ||
     !location ||
     !quantity ||
+    !unit ||
     !type
   ) {
     return next(new errorHandler("Please fill all the fields", 400));
@@ -83,6 +85,7 @@ export const addNewBiddingItem = catchAsyncErrors(async (req, res, next) => {
       condition,
       location,
       quantity,
+      unit,
       type, 
       createdBy: req.user._id,
       image: {
@@ -120,7 +123,7 @@ export const getBiddingDetails = catchAsyncErrors(async (req, res, next) => {
   if(!item){
     return next(new errorHandler("Item not found",404));
   }
-  const sortedBidders = item.bids.sort((a,b) => b.bid - a.bid);
+  const sortedBidders = item.bids.sort((a,b) => b.amount - a.amount);
   res.status(200).json({
     success: true,
     item,

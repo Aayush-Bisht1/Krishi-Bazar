@@ -11,14 +11,18 @@ const biddingSchema = new mongoose.Schema({
   category: String,
   type: {
     type: String,
-    enum: ["Yeild/Item", "Contract"],
+    enum: ["yielditem", "contract"],
   },
   location: String,
   condition: {
     type: String,
-    enum: ["Fair", "Good", "Excellent"],
+    enum: ["fair", "good", "excellent"],
   },
   quantity: String,
+  unit:{
+    type: String,
+    enum: ["quintal","kg","ton"],
+  },
   startTime: String,
   endTime: String,
   image: {
@@ -44,7 +48,7 @@ const biddingSchema = new mongoose.Schema({
       },
       userName: String,
       profileImage: String,
-      bid: Number,
+      amount: Number,
     },
   ],
   highestBidder: {

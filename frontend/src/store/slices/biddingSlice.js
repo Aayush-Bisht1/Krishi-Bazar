@@ -9,10 +9,19 @@ const biddingSlice = createSlice({
     itemDetails: {},
     biddingDetails: {},
     biddingItemBidders: [],
-    myBiddingItem: [],
+    myBiddingItems: [],
     allBiddingItems: [],
   },
   reducers: {
+    createBiddingItemRequest(state, action) {
+      state.loading = true;
+    },
+    createBiddingItemSuccess(state, action) {
+      state.loading = false;
+    },
+    createBiddingItemFailed(state, action) {
+      state.loading = false;
+    },
     getAllBiddingItemsRequest(state, action) {
       state.loading = true;
     },
@@ -23,7 +32,7 @@ const biddingSlice = createSlice({
     getAllBiddingItemsFailed(state, action) {
       state.loading = false;
     },
-    getBiddingDetailsRequest(state, action) { 
+    getBiddingDetailsRequest(state, action) {
       state.loading = true;
     },
     getBiddingDetailsSuccess(state, action) {
@@ -34,12 +43,24 @@ const biddingSlice = createSlice({
     getBiddingDetailsFailed(state, action) {
       state.loading = false;
     },
+    getMyBiddingItemsRequest(state, action) {
+      state.loading = true;
+      state.myBiddingItems = [];
+    },
+    getMyBiddingItemsSuccess(state, action) {
+      state.loading = false;
+      state.myBiddingItems = action.payload;
+    },
+    getMyBiddingItemsFailed(state, action) {
+      state.loading = false;
+      state.myBiddingItems = [];
+    },
     resetSlice(state, action) {
       state.loading = false;
       state.itemDetails = state.itemDetails;
       state.biddingDetails = state.biddingDetails;
       state.biddingItemBidders = state.biddingItemBidders;
-      state.myBiddingItem = state.myBiddingItem;
+      state.myBiddingItems = state.myBiddingItems;
       state.allBiddingItems = state.allBiddingItems;
     },
   },
@@ -82,5 +103,44 @@ export const getBiddingDetails = (id) => async (dispatch) => {
     dispatch(biddingSlice.actions.resetSlice());
   }
 };
+
+export const createBiddingItem = (data) => async (dispatch) => {
+  dispatch(biddingSlice.actions.createBiddingItemRequest());
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/v1/biddingitem/create",
+      data,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    dispatch(biddingSlice.actions.createBiddingItemSuccess());
+    toast.success(response.data.message);
+    dispatch(biddingSlice.actions.resetSlice());
+  } catch (error) {
+    dispatch(biddingSlice.actions.createBiddingItemFailed());
+    toast.error(error.response.data.message);
+    dispatch(biddingSlice.actions.resetSlice());
+  }
+};
+
+export const getMyBiddingItems = () => async(dispatch) => {
+  dispatch(biddingSlice.actions.getMyBiddingItemsRequest());
+  try {
+    const response = await axios.get(
+      "http://localhost:5000/api/v1/biddingitem/allitems",
+      {
+        withCredentials: true,
+      }
+    );
+    dispatch(biddingSlice.actions.getMyBiddingItemsSuccess(response.data.items));
+    dispatch(biddingSlice.actions.resetSlice());
+  } catch (error) {
+    dispatch(biddingSlice.actions.getMyBiddingItemsFailed());
+    toast.error(error.response.data.message);
+    dispatch(biddingSlice.actions.resetSlice());
+  }
+}
 
 export default biddingSlice.reducer;
