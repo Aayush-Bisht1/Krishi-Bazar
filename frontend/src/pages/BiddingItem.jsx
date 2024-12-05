@@ -72,7 +72,7 @@ export const TimeDisplay = ({ startTime, endTime }) => {
 const BiddingDetails = () => {
   const navigate = useNavigate();
   const [amount, setAmount] = useState(0);
-  const {isAuthenticated} = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
   const { loading, biddingItemBidders, biddingDetails } = useSelector(
     (state) => state.bidding
   );
@@ -85,10 +85,10 @@ const BiddingDetails = () => {
     dispatch(getBiddingDetails(id));
   };
   useEffect(() => {
-    if(!isAuthenticated){
+    if (!isAuthenticated) {
       navigate("/login");
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -206,7 +206,7 @@ const BiddingDetails = () => {
                       <div className="space-y-6">
                         <div>
                           <h1 className="text-2xl font-bold">
-                            {biddingDetails.title}
+                            {biddingDetails?.title?.toUpperCase()}
                           </h1>
                           <TimeDisplay
                             startTime={biddingDetails.startTime}
@@ -241,21 +241,21 @@ const BiddingDetails = () => {
                               Category:
                             </span>
                             <span className="ml-2">
-                              {biddingDetails.category}
+                              {biddingDetails?.category?.toUpperCase()}
                             </span>
                           </div>
                           <div>
                             <span className="text-gray-500 font-bold">
                               Type:
                             </span>
-                            <span className="ml-2">{biddingDetails.type}</span>
+                            <span className="ml-2">{biddingDetails?.type?.toUpperCase()}</span>
                           </div>
                           <div>
                             <span className="text-gray-500 font-bold">
                               Condition:
                             </span>
                             <span className="ml-2">
-                              {biddingDetails.condition}
+                              {biddingDetails?.condition?.toUpperCase()}
                             </span>
                           </div>
                           <div>
@@ -263,7 +263,14 @@ const BiddingDetails = () => {
                               Quantity:
                             </span>
                             <span className="ml-2">
-                              {biddingDetails.quantity}
+                              {biddingDetails.category === "equipment" ? (
+                                <>{biddingDetails.quantity}</>
+                              ) : (
+                                <>
+                                  {biddingDetails.quantity}
+                                  {biddingDetails?.unit?.toUpperCase()}
+                                </>
+                              )}
                             </span>
                           </div>
                           <div>
@@ -271,7 +278,7 @@ const BiddingDetails = () => {
                               Location:
                             </span>
                             <span className="ml-2">
-                              {biddingDetails.location}
+                              {biddingDetails?.location?.toUpperCase()}
                             </span>
                           </div>
                         </div>

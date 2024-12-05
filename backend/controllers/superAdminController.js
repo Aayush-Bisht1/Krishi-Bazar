@@ -23,10 +23,10 @@ export const deleteBiddingItem = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getAllPaymentProofs = catchAsyncErrors(async (req, res, next) => {
-    const paymentproof = await PaymentProof.find();
+    const paymentProofs = await PaymentProof.find();
     res.status(200).json({
         success: true,
-        paymentproof,
+        paymentProofs,
     })
 });
 

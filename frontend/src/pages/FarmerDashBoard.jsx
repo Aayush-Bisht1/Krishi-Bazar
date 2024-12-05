@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Gavel, DollarSign, List } from "lucide-react";
@@ -11,9 +11,15 @@ import Spinner from "@/components/Spinner";
 const FarmerDashBoard = () => {
   const { isAuthenticated, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const getStoredTab = () => localStorage.getItem("selectedTab") || "bidding";
+  const [activeTab, setActiveTab] = useState(getStoredTab());
   const handleLogout = () => {
     dispatch(logout());
   };
+ const handleTabChange = (value) => {
+   setActiveTab(value);
+   localStorage.setItem("selectedTab", value);
+ }
 
   return (
     <>
@@ -32,12 +38,12 @@ const FarmerDashBoard = () => {
             </Button>
           </div>
 
-          <Tabs defaultValue="bidding" className="space-y-4">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
             <TabsList className="grid grid-cols-3 gap-4">
               <TabsTrigger value="bidding" className="flex items-center gap-2">
                 <Gavel size={16} />
                 Create Bidding
-              </TabsTrigger>
+              </TabsTrigger>  
               <TabsTrigger
                 value="commission"
                 className="flex items-center gap-2"
@@ -51,15 +57,15 @@ const FarmerDashBoard = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="bidding">
+            <TabsContent value="bidding" onClick={()=>setDefaultTab("bidding")}>
               <CreateBidding />
             </TabsContent>
 
-            <TabsContent value="commission">
+            <TabsContent value="commission" onClick={()=>setDefaultTab("commission")}>
               <SubmitCommission />
             </TabsContent>
 
-            <TabsContent value="auctions">
+            <TabsContent value="auctions" onClick={()=>setDefaultTab("auctions")}>
               <ViewMyAuctions />
             </TabsContent>
           </Tabs>

@@ -1,4 +1,4 @@
-import { getMyBiddingItems } from "@/store/slices/biddingSlice";
+import { deleteBiddingItem, getMyBiddingItems, republishBiddingItem } from "@/store/slices/biddingSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,6 @@ const ViewMyAuctions = () => {
   const handleDeleteBiddingItem = (id) => {
     dispatch(deleteBiddingItem(id));
   };
-  const handleRepublish = (id) => {};
   return (
     <>
       <Card>
@@ -81,7 +80,7 @@ const ViewMyAuctions = () => {
                       </Button>
                       <Button
                         className="bg-red-400 transition-all duration-300 hover:bg-red-500"
-                        onClick={handleDeleteBiddingItem(item._id)}
+                        onClick={() => handleDeleteBiddingItem(item._id)}
                       >
                         Delete Bidding
                       </Button>

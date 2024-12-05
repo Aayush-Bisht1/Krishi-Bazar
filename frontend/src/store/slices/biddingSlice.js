@@ -173,6 +173,8 @@ export const deleteBiddingItem = (id) => async (dispatch) => {
     );
     dispatch(biddingSlice.actions.deleteBiddingItemSuccess());
     toast.success(response.data.message);
+    dispatch(getAllBiddingItems());
+    dispatch(getMyBiddingItems());
     dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.deleteBiddingItemFailed());
@@ -184,7 +186,7 @@ export const deleteBiddingItem = (id) => async (dispatch) => {
 export const republishBiddingItem = (id,data) => async (dispatch) => {
   dispatch(biddingSlice.actions.republishBiddingItemRequest());
   try {
-    const response = await axios.post(
+    const response = await axios.put(
       `http://localhost:5000/api/v1/biddingitem/item/republish/${id}`,
       data,
       {
@@ -194,8 +196,8 @@ export const republishBiddingItem = (id,data) => async (dispatch) => {
     );
     dispatch(biddingSlice.actions.republishBiddingItemSuccess());
     toast.success(response.data.message);
-    dispatch(biddingSlice.actions.getAllBiddingItems());
-    dispatch(biddingSlice.actions.getMyBiddingItems());
+    dispatch(getAllBiddingItems());
+    dispatch(getMyBiddingItems());
     dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.republishBiddingItemFailed());

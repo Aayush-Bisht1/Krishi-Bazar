@@ -24,7 +24,7 @@ const ViewBiddingDetails = () => {
     (state) => state.bidding
   );
   const dispatch = useDispatch();
-  const { id } = useParams(); 
+  const { id } = useParams();
   useEffect(() => {
     if (!isAuthenticated || user.role !== "farmer") {
       navigate("/login");
@@ -203,7 +203,14 @@ const ViewBiddingDetails = () => {
                               Quantity:
                             </span>
                             <span className="ml-2">
-                              {biddingDetails.quantity}
+                              {biddingDetails.unit === "equipment" ? (
+                                <>{biddingDetails.quantity}</>
+                              ) : (
+                                <>
+                                  {biddingDetails.quantity}
+                                  {biddingDetails.unit}
+                                </>
+                              )}{" "}
                             </span>
                           </div>
                           <div>

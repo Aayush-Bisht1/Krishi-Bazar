@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["farmer","buyer","super admin"]
+        enum: ["farmer","buyer","superadmin"]
     },
     unpaidCommission: {
         type: Number,

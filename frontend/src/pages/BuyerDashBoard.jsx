@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, ShoppingBag, History, Timer, Star } from "lucide-react";
+import { ShoppingBag, History, Star } from "lucide-react";
 import MarketPlace from "@/components/MarketPlace";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { getAllBiddingItems } from "@/store/slices/biddingSlice";
 
 const BuyerDashBoard = () => {
   const [myBids] = useState([
@@ -26,10 +27,21 @@ const BuyerDashBoard = () => {
     },
   ]);
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.user);
+  const getSelectedTab = () =>
+    localStorage.getItem("selectedTab") || "marketplace";
+  const [activeTab, setActiveTab] = useState(getSelectedTab());
+  const { allBiddingItems, loading } = useSelector((state) => state.bidding);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllBiddingItems());
+  },[dispatch]);
   const handleLogout = () => {
     dispatch(logout());
+  };
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    localStorage.setItem("selectedTab", value);
   };
 
   return (
@@ -43,7 +55,11 @@ const BuyerDashBoard = () => {
         </Button>
       </div>
 
-      <Tabs defaultValue="marketplace" className="space-y-4">
+      <Tabs
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="space-y-4"
+      >
         <TabsList className="grid grid-cols-3 gap-4">
           <TabsTrigger value="marketplace" className="flex items-center gap-2">
             <ShoppingBag size={16} />
@@ -70,30 +86,41 @@ const BuyerDashBoard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {myBids.map((bid) => (
-                  <div key={bid.id} className="border rounded-lg p-4">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h3 className="font-medium">{bid.product}</h3>
-                        <p className="text-sm text-gray-500">
-                          Your Bid: {bid.myBid}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm">Highest Bid: {bid.highestBid}</p>
-                        <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs ${
-                            bid.status === "Winning"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {bid.status}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                {allBiddingItems.map(
+                  (item) =>
+                    item.bids.length > 0 &&
+                    item.bids.map(
+                      (bid, id) =>
+                        bid.userId === user._id && (
+                          <div key={id} className="border rounded-lg p-4 mb-4">
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <h3 className="font-medium">{item.title}</h3>
+                                <p className="text-sm text-gray-500">
+                                  Your Bid: {bid.amount}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm">
+                                  Highest Bid: {item.currentBid}
+                                </p>
+                                <span
+                                  className={`inline-block px-2 py-1 rounded-full text-xs ${
+                                    item.currentBid - bid.amount > 0
+                                      ? "bg-red-100 text-red-800"
+                                      : "bg-green-100 text-green-800"
+                                  }`}
+                                >
+                                  {
+                                    item.currentBid - bid.amount > 0 ? "Outbid" : "Winning"
+                                  }
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                    )
+                )}
               </div>
             </CardContent>
           </Card>

@@ -25,7 +25,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/farmer/dashboard"  element={<ProtectedRoute allowedRoles={["farmer"]}><FarmerDashBoard /></ProtectedRoute>} />
         <Route path="/buyer/dashboard" element={<ProtectedRoute allowedRoles={["buyer"]}><BuyerDashBoard /></ProtectedRoute>} />
-        <Route path="/superadmin" element={<ProtectedRoute allowedRoles={["superadmin"]}><SuperAdminDashBoard /></ProtectedRoute>} />
+        <Route path="/superadmin/dashboard" element={<ProtectedRoute allowedRoles={["superadmin"]}><SuperAdminDashBoard /></ProtectedRoute>} />
         <Route path="/signup/:text" element={<SignUp />} />
         <Route path="/marketplace" element={<MarketPlace />} />
         <Route path="/login" element={<LogIn />} />
