@@ -15,10 +15,10 @@ import { useDispatch } from "react-redux";
 import { fetchUser } from "./store/slices/userSlice";
 import { useEffect } from "react";
 function App() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchUser());
-  },[dispatch]);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(fetchUser());
+  // }, [dispatch]);
   return (
     <Router>
       <Routes>

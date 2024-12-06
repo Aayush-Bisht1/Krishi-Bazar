@@ -27,6 +27,7 @@ const BuyerDashBoard = () => {
   }, [dispatch, isAuthenticated]);
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.removeItem("selectedTab");
   };
   const handleTabChange = (value) => {
     setActiveTab(value);
@@ -55,7 +56,7 @@ const BuyerDashBoard = () => {
             onValueChange={handleTabChange}
             className="space-y-4"
           >
-            <TabsList className="grid grid-cols-3 gap-4">
+            <TabsList className="grid grid-cols-2 gap-4">
               <TabsTrigger
                 value="marketplace"
                 className="flex items-center gap-2"
@@ -66,13 +67,6 @@ const BuyerDashBoard = () => {
               <TabsTrigger value="mybids" className="flex items-center gap-2">
                 <History size={16} />
                 My Bids
-              </TabsTrigger>
-              <TabsTrigger
-                value="watchlist"
-                className="flex items-center gap-2"
-              >
-                <Star size={16} />
-                Watchlist
               </TabsTrigger>
             </TabsList>
 
@@ -140,23 +134,6 @@ const BuyerDashBoard = () => {
                       </p>
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="watchlist">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Watched Items</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8 text-gray-500">
-                    <Star className="w-12 h-12 mx-auto mb-4 stroke-1" />
-                    <p>No items in your watchlist yet.</p>
-                    <p className="text-sm">
-                      Add items to track their prices and bidding status.
-                    </p>
-                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

@@ -21,6 +21,7 @@ const FarmerDashBoard = () => {
   const [activeTab, setActiveTab] = useState(getStoredTab());
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.removeItem("selectedTab");
   };
  const handleTabChange = (value) => {
    setActiveTab(value);

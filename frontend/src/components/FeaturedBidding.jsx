@@ -32,12 +32,12 @@ const FeaturedBidding = ({
                   <h3 className="text-xl font-semibold">{title}</h3>
                   <span
                     className={`inline-block px-2 py-1 rounded-full text-xs ${
-                      type === "yield"
+                      type === "yielditem"
                         ? "bg-green-100 text-green-800"
                         : "bg-blue-100 text-blue-800"
                     }`}
                   >
-                    {type === "yield" ? "Current Yield" : "Contract"}
+                    {type === "yielditem" ? "Current Yield" : "Contract"}
                   </span>
                 </div>
                 <TimeDisplay

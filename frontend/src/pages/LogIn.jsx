@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "@/store/slices/userSlice";
+import { fetchUser, login } from "@/store/slices/userSlice";
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ const LogIn = () => {
     password: "",
   });
   const { loading, isAuthenticated, user } = useSelector((state) => state.user);
+  const userRole = user?.role;
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -38,10 +39,11 @@ const LogIn = () => {
     dispatch(login(formdata));
   };
   useEffect(() => {
+    dispatch(fetchUser());
     if (isAuthenticated) {
-      navigate(`/${user.role}/dashboard`);
+      navigate(`/${userRole}/dashboard`);
     }
-   },[isAuthenticated,navigate,user]);
+   },[isAuthenticated,navigate,userRole,dispatch]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
