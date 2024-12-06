@@ -57,15 +57,15 @@ const FarmerDashBoard = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="bidding" onClick={()=>setDefaultTab("bidding")}>
+            <TabsContent value="bidding">
               <CreateBidding />
             </TabsContent>
 
-            <TabsContent value="commission" onClick={()=>setDefaultTab("commission")}>
+            <TabsContent value="commission">
               <SubmitCommission />
             </TabsContent>
 
-            <TabsContent value="auctions" onClick={()=>setDefaultTab("auctions")}>
+            <TabsContent value="auctions">
               <ViewMyAuctions />
             </TabsContent>
           </Tabs>

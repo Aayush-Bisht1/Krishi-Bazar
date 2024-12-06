@@ -201,7 +201,7 @@ export const getSinglePaymentProof = (id) => async (dispatch) => {
   }
 };
 
-export const updateProofStatus = (id, status, amount) => async (dispatch) => {
+export const updatePaymentProof = (id, status, amount) => async (dispatch) => {
   dispatch(superAdminSlice.actions.updateProofStatusRequest());
   try {
     const response = await axios.put(

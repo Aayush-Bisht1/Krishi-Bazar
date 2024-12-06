@@ -87,6 +87,7 @@ export const fetchAllUsers = catchAsyncErrors(async (req, res, next) => {
                     role: "$role",
                 },
                 count: { $sum: 1 },
+
             },
         },
         {
@@ -103,8 +104,8 @@ export const fetchAllUsers = catchAsyncErrors(async (req, res, next) => {
         }
     ]);
 
-    const bidders = users.filter((user) => user.role === "Buyer");
-    const farmers = users.filter((user) => user.role === "Farmer");
+    const bidders = users.filter((user) => user.role === "buyer");
+    const farmers = users.filter((user) => user.role === "farmer");
     
     const transformUsersToMonthlyArray = (data, totalMonths=12) => {
         const result = Array(totalMonths).fill(0);
