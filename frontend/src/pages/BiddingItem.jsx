@@ -78,23 +78,22 @@ const BiddingDetails = () => {
   );
   const dispatch = useDispatch();
   const { id } = useParams();
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    if (id) {
+      dispatch(getBiddingDetails(id));
+    }
+  }, [id, dispatch, isAuthenticated, navigate]);
   const handleBid = () => {
     const formData = new FormData();
     formData.append("amount", amount);
     dispatch(placeBid(id, formData));
     dispatch(getBiddingDetails(id));
   };
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(getBiddingDetails(id));
-    }
-  }, [id, dispatch]);
 
   const BidsSection = () => (
     <div className="mt-8 lg:mt-0">

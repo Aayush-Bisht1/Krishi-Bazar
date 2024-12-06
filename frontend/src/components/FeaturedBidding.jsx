@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {TimeDisplay} from "../pages/BiddingItem";
 const FeaturedBidding = ({
   imgsrc,
@@ -14,10 +14,15 @@ const FeaturedBidding = ({
   endTime,
   id,
 }) => {
+  const navigate = useNavigate();
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate(`/bidding/item/${id}`);
+  } 
   return (
     <>
       <Card>
-        <Link to={`/bidding/item/${id}`}>
+        <div className="cursor-pointer" onClick={handleClick} >
           <CardContent className="p-2 mx-auto flex flex-col gap-2">
             <div className="flex-1">
               <img
@@ -63,7 +68,7 @@ const FeaturedBidding = ({
               </div>
             </div>
           </CardContent>
-        </Link>
+          </div>
       </Card>
     </>
   );

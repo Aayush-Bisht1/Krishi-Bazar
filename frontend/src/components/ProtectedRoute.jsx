@@ -1,8 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Spinner from './Spinner';
-import { useEffect } from 'react';
-import { fetchUser } from '@/store/slices/userSlice';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, loading } = useSelector((state) => state.user);

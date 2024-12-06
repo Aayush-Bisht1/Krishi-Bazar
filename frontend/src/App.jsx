@@ -11,14 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MarketPlace from "./components/MarketPlace";
 import BiddingItem from "./pages/biddingItem";
 import ViewBiddingDetails from "./pages/ViewBiddingDetails";
-import { useDispatch } from "react-redux";
-import { fetchUser } from "./store/slices/userSlice";
-import { useEffect } from "react";
 function App() {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(fetchUser());
-  // }, [dispatch]);
   return (
     <Router>
       <Routes>
