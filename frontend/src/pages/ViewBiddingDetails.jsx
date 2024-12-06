@@ -26,7 +26,7 @@ const ViewBiddingDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   useEffect(() => {
-    if (!isAuthenticated || user.role !== "farmer") {
+    if (!isAuthenticated || user.role === "buyer") {
       navigate("/login");
     }
     if (id) {

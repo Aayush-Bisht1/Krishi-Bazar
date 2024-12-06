@@ -72,16 +72,7 @@ const biddingSlice = createSlice({
     },
     republishBiddingItemFailed(state, action) {
       state.loading = false;
-    },
-    
-    resetSlice(state, action) {
-      state.loading = false;
-      state.itemDetails = state.itemDetails;
-      state.biddingDetails = state.biddingDetails;
-      state.biddingItemBidders = state.biddingItemBidders;
-      state.myBiddingItems = state.myBiddingItems;
-      state.allBiddingItems = state.allBiddingItems;
-    },
+    }
   },
 });
 
@@ -97,11 +88,10 @@ export const getAllBiddingItems = () => async (dispatch) => {
     dispatch(
       biddingSlice.actions.getAllBiddingItemsSuccess(response.data.items)
     );
-    dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
+    console.log(error);
     dispatch(biddingSlice.actions.getAllBiddingItemsFailed());
     toast.error(error.response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   }
 };
 
@@ -115,11 +105,9 @@ export const getBiddingDetails = (id) => async (dispatch) => {
       }
     );
     dispatch(biddingSlice.actions.getBiddingDetailsSuccess(response.data));
-    dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.getBiddingDetailsFailed());
     toast.error(error.response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   }
 };
 
@@ -136,11 +124,9 @@ export const createBiddingItem = (data) => async (dispatch) => {
     );
     dispatch(biddingSlice.actions.createBiddingItemSuccess());
     toast.success(response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.createBiddingItemFailed());
     toast.error(error.response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   }
 };
 
@@ -148,17 +134,15 @@ export const getMyBiddingItems = () => async(dispatch) => {
   dispatch(biddingSlice.actions.getMyBiddingItemsRequest());
   try {
     const response = await axios.get(
-      "http://localhost:5000/api/v1/biddingitem/allitems",
+      "http://localhost:5000/api/v1/biddingitem/myitems",
       {
         withCredentials: true,
       }
     );
     dispatch(biddingSlice.actions.getMyBiddingItemsSuccess(response.data.items));
-    dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.getMyBiddingItemsFailed());
     toast.error(error.response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   }
 }
 
@@ -175,11 +159,9 @@ export const deleteBiddingItem = (id) => async (dispatch) => {
     toast.success(response.data.message);
     dispatch(getAllBiddingItems());
     dispatch(getMyBiddingItems());
-    dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.deleteBiddingItemFailed());
     toast.error(error.response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   }
 };
 
@@ -198,11 +180,9 @@ export const republishBiddingItem = (id,data) => async (dispatch) => {
     toast.success(response.data.message);
     dispatch(getAllBiddingItems());
     dispatch(getMyBiddingItems());
-    dispatch(biddingSlice.actions.resetSlice());
   } catch (error) {
     dispatch(biddingSlice.actions.republishBiddingItemFailed());
     toast.error(error.response.data.message);
-    dispatch(biddingSlice.actions.resetSlice());
   }
 }
 

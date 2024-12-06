@@ -13,7 +13,7 @@ const SubmitCommission = () => {
     amount: "",
     comment: "",
   });
-  const handleInputChange = async (e) => {
+  const handleInputChange = (e) => {
     setFormFields({
       ...formFields,
       [e.target.name]: e.target.value,
@@ -25,6 +25,7 @@ const SubmitCommission = () => {
       [e.target.name]: e.target.files[0],
     });
   };
+  const {user} = useSelector((state) => state.user);
   const { loading } = useSelector((state) => state.commission);
   const dispatch = useDispatch();
   const handlePaymentProof = (e) => {
@@ -98,14 +99,13 @@ const SubmitCommission = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium mb-2">Current Commission Rate</h3>
-                  <p className="text-2xl font-bold">2.5%</p>
+                  <p className="text-2xl font-bold">1%</p>
                 </div>
                 <div className="p-4 border rounded-lg">
-                  <h3 className="font-medium mb-2">Total Commission Paid</h3>
-                  <p className="text-2xl font-bold">₹12,500</p>
+                  <h3 className="font-medium mb-2">Your Unpaid Commission</h3>
+                  <p className="text-2xl font-bold">₹{user.unpaidCommission}</p>
                 </div>
               </div>
-              <Button className="w-full">View Commission History</Button>
             </div>
           </CardContent>
         </div>

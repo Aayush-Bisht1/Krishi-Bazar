@@ -215,6 +215,7 @@ export const updatePaymentProof = (id, status, amount) => async (dispatch) => {
     dispatch(superAdminSlice.actions.updateProofStatusSuccess());
     toast.success(response.data.message);
     dispatch(getAllPaymentProofs());
+    dispatch(superAdminSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(superAdminSlice.actions.updateProofStatusFailed());
     toast.error(error.response.data.message);

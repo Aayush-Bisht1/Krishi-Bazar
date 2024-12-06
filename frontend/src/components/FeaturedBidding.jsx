@@ -8,6 +8,7 @@ const FeaturedBidding = ({
   type,
   startingBid,
   quantity,
+  unit,
   location,
   startTime,
   endTime,
@@ -48,7 +49,7 @@ const FeaturedBidding = ({
               <div className="grid grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm text-gray-500">Quantity</p>
-                  <p className="text-lg font-medium">{quantity}</p>
+                  <p className="text-lg font-medium">{quantity}{unit.toUpperCase()}</p>
                 </div>
 
                 <div>

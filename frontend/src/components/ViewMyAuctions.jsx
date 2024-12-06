@@ -13,15 +13,11 @@ import { CalendarIcon } from "lucide-react";
 const ViewMyAuctions = () => {
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState(false);
-  const { isAuthenticated, user } = useSelector((state) => state.user);
   const { myBiddingItems, loading } = useSelector((state) => state.bidding);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!isAuthenticated || user.role !== "farmer") {
-      navigate("/login");
-    }
     dispatch(getMyBiddingItems());
-  }, [dispatch, isAuthenticated, user, navigate]);
+  }, [dispatch]);
   const handleDeleteBiddingItem = (id) => {
     dispatch(deleteBiddingItem(id));
   };

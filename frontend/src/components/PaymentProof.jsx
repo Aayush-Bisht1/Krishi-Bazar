@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -17,12 +17,6 @@ import {
   getSinglePaymentProof,
   updatePaymentProof,
 } from "@/store/slices/superAdminSlice";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 import {
@@ -37,25 +31,22 @@ const PaymentProof = () => {
   const { paymentProofs, singlePaymentProof } = useSelector(
     (state) => state.superAdmin
   );
-  const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState(singlePaymentProof?.amount || "");
-  const [status, setStatus] = useState(singlePaymentProof?.status || "");
-  const [isLoading, setIsLoading] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const dispatch = useDispatch();
+
   const handlePaymentProofDelete = (id) => {
     dispatch(deletePaymentProof(id));
   };
 
   const handleFetchPaymentDetail = (id) => {
     dispatch(getSinglePaymentProof(id));
-    setOpen(true);
   };
-  const handlePaymentProofUpdate = (id) => {
-    setIsLoading(true);
-    dispatch(updatePaymentProof(id, status, amount));
-    setIsLoading(false);
-    setOpen(false);
-  };
+
+  useEffect(() => {
+    if (singlePaymentProof && Object.keys(singlePaymentProof).length > 0) {
+      setOpenDrawer(true);
+    }
+  }, [singlePaymentProof]);
 
   return (
     <>
@@ -106,38 +97,68 @@ const PaymentProof = () => {
             </TableBody>
           </Table>
         </CardContent>
+
+        <Drawer setOpenDrawer={setOpenDrawer} openDrawer={openDrawer} />
       </Card>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="top" className="h-[90vh]">
-          <SheetHeader>
-            <SheetTitle className="text-[#D6482B] text-3xl font-semibold text-center">
+    </>
+  );
+};
+
+export default PaymentProof;
+
+export const Drawer = ({ setOpenDrawer, openDrawer }) => {
+  const { singlePaymentProof, loading } = useSelector(
+    (state) => state.superAdmin
+  );
+  const [amount, setAmount] = useState(singlePaymentProof.amount || "");
+  const [status, setStatus] = useState(singlePaymentProof.status || "");
+
+  const dispatch = useDispatch();
+  const handlePaymentProofUpdate = () => {
+    dispatch(updatePaymentProof(singlePaymentProof._id, status, amount));
+  };
+
+  return (
+    <>
+      <section
+        className={`fixed ${
+          openDrawer && singlePaymentProof.userId ? "bottom-0" : "-bottom-full"
+        }  left-0 w-full transition-all duration-300 h-full bg-[#00000087] flex items-end`}
+      >
+        <div className="bg-white h-fit transition-all duration-300 w-full">
+          <div className="w-full px-5 py-8 sm:max-w-[640px] sm:m-auto">
+            <h3 className="text-[#D6482B]  text-3xl font-semibold text-center mb-1">
               Update Payment Proof
-            </SheetTitle>
-          </SheetHeader>
-          <div className="p-4 max-w-[640px] mx-auto">
-            <div className="space-y-4">
-              <div>
+            </h3>
+            <p className="text-stone-600">
+              You can update payment status and amount.
+            </p>
+            <form className="flex flex-col gap-4 my-5" type="submit">
+              <div className="flex flex-col gap-2">
                 <Label>User ID</Label>
-                <Input value={singlePaymentProof?.userId || ""} disabled />
+                <Input
+                  type="text"
+                  value={singlePaymentProof.userId || ""}
+                  disabled
+                  onChange={(e) => e.target.value}
+                />
               </div>
-              <div>
+              <div className="flex flex-col gap-2">
                 <Label>Amount</Label>
                 <Input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  defaultValue={singlePaymentProof?.amount}
                 />
               </div>
-              <div>
-                <Label>Status</Label>
+              <div className="flex flex-col gap-2">
+                <Label >Status</Label>
                 <Select
                   value={status}
-                  onValueChange={setStatus}
-                  defaultValue={singlePaymentProof?.status}
+                  onValueChange={(e) => setStatus(e)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder="Select Status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Pending">Pending</SelectItem>
@@ -147,38 +168,45 @@ const PaymentProof = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
+              <div className="flex flex-col gap-2">
                 <Label>Comment</Label>
-                <Textarea value={singlePaymentProof?.comment || ""} disabled />
+                <Textarea
+                rows={3}
+                  value={singlePaymentProof.comment || ""}
+                  onChange={(e) => e.target.value}
+                  disabled
+                  className="md:text-lg"
+                />
               </div>
-
-              <Link
-                to={singlePaymentProof?.proof?.url || ""}
-                className="bg-[#D6482B] block text-center py-2 rounded-md text-white font-semibold"
-                target="_blank"
-              >
-                Payment Proof (SS)
-              </Link>
-
-              <Button
-                className="w-full bg-blue-500 hover:bg-blue-700"
-                onClick={handlePaymentProofUpdate}
-              >
-                {isLoading ? "Updating Payment Proof" : "Update Payment Proof"}
-              </Button>
-
-              <Button
-                className="w-full bg-yellow-500 hover:bg-yellow-700"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-            </div>
+              <div>
+                <Link
+                  to={singlePaymentProof.proof?.url || ""}
+                  className="bg-[#D6482B] flex justify-center w-full py-2 rounded-md text-white font-semibold text-xl transition-all duration-300 hover:bg-[#b8381e]"
+                  target="_blank"
+                >
+                  Payment Proof (SS)
+                </Link>
+              </div>
+              <div>
+                <Button
+                  className="bg-blue-500 flex justify-center w-full py-2 text-xl transition-all duration-300 hover:bg-blue-700"
+                  onClick={handlePaymentProofUpdate}
+                >
+                  {loading ? "Updating Payment Proof" : "Update Payment Proof"}
+                </Button>
+              </div>
+              <div>
+                <Button
+                  className="bg-yellow-500 flex justify-center w-full py-2 text-xl transition-all duration-300 hover:bg-yellow-700"
+                  onClick={() => setOpenDrawer(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
           </div>
-        </SheetContent>
-      </Sheet>
+        </div>
+      </section>
     </>
   );
 };
-
-export default PaymentProof;

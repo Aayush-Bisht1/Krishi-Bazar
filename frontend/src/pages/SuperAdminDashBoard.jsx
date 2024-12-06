@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -26,8 +25,6 @@ import {
   DollarSign,
   ShoppingBag,
   AlertCircle,
-  Check,
-  Trash2,
   FileCheck,
   BarChart3,
 } from "lucide-react";
@@ -40,8 +37,15 @@ import {
 } from "@/store/slices/superAdminSlice";
 import Spinner from "@/components/Spinner";
 import PaymentProof from "@/components/PaymentProof";
+import {
+  deleteBiddingItem,
+  getAllBiddingItems,
+} from "@/store/slices/biddingSlice";
+import { Link } from "react-router-dom";
+import { logout } from "@/store/slices/userSlice";
 
 const SuperAdminDashBoard = () => {
+  const { isAuthenticated } = useSelector((state) => state.user);
   const getActiveTab = () => localStorage.getItem("selectedTab") || "revenue";
   const [activeTab, setActiveTab] = useState(getActiveTab());
   const handleTabChange = (value) => {
@@ -50,92 +54,70 @@ const SuperAdminDashBoard = () => {
   };
   const { loading, monthlyRevenue, totalFarmers, totalBidders, paymentProofs } =
     useSelector((state) => state.superAdmin);
+  const { allBiddingItems } = useSelector((state) => state.bidding);
   const dispatch = useDispatch();
   useEffect(() => {
+    if(!localStorage.getItem("selectedTab") && isAuthenticated ){
+      localStorage.setItem("selectedTab", "revenue");
+      setActiveTab("revenue");
+    }
     dispatch(getMonthlyRevenue());
     dispatch(fetchAllUsers());
+    dispatch(getAllBiddingItems());
     dispatch(getAllPaymentProofs());
     dispatch(clearAllErrors());
   }, [dispatch]);
 
-  const [biddings] = useState([
-    {
-      id: 1,
-      product: "Organic Wheat",
-      farmer: "Ramesh Kumar",
-      buyer: "AgroTech Ltd",
-      amount: "₹250,000",
-      status: "Pending",
-      proofStatus: "Unverified",
-    },
-    {
-      id: 2,
-      product: "Rice Contract",
-      farmer: "Suresh Patel",
-      buyer: "FoodCorp Inc",
-      amount: "₹300,000",
-      status: "Completed",
-      proofStatus: "Verified",
-    },
-  ]);
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
-  const [users] = useState([
-    {
-      id: 1,
-      name: "Ramesh Kumar",
-      role: "Farmer",
-      joinDate: "2024-01-15",
-      status: "Active",
-      transactions: 12,
-    },
-    {
-      id: 2,
-      name: "AgroTech Ltd",
-      role: "Buyer",
-      joinDate: "2024-02-01",
-      status: "Active",
-      transactions: 8,
-    },
-  ]);
+  const handleDelete = (id) => {
+    dispatch(deleteBiddingItem(id));
+  };
 
-  const [payments] = useState([
-    {
-      id: 1,
-      transactionId: "TXN123456",
-      amount: "₹250,000",
-      date: "2024-03-15",
-      status: "Verified",
-      proofDocument: "payment_proof_123.pdf",
-    },
-    {
-      id: 2,
-      transactionId: "TXN123457",
-      amount: "₹300,000",
-      date: "2024-03-16",
-      status: "Pending",
-      proofDocument: "payment_proof_124.pdf",
-    },
-  ]);
   let totalUsers = 0;
   for (let i = 0; i < totalBidders.length && i < totalFarmers.length; i++) {
     totalUsers += totalBidders[i] + totalFarmers[i];
   }
+
   const pendingproofs = paymentProofs.filter(
     (proof) => proof.status === "Pending"
   ).length;
-  const totalRevenue = monthlyRevenue.reduce(
-    (acc, curr) => acc + curr.revenue,
-    0
-  );
+
+  let totalRevenue = 0;
+  monthlyRevenue.forEach((revenue) => {
+    totalRevenue += revenue;
+  });
   const monthName = (index) => {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     return months[index];
-  }
+  };
+  const getRevenueData = () => {
+    return monthlyRevenue.map((revenue, index) => ({
+      month: monthName(index),
+      revenue: revenue,
+    }));
+  };
   const getUserData = () => {
     return totalFarmers.map((farmers, index) => ({
       month: monthName(index),
       farmers: farmers,
       buyers: totalBidders[index] || 0,
+      total: farmers + totalBidders[index] || 0,
     }));
   };
 
@@ -145,7 +127,16 @@ const SuperAdminDashBoard = () => {
         <Spinner />
       ) : (
         <div className="p-4 max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Super Admin Dashboard</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold mb-6">Super Admin Dashboard</h1>
+            <Button
+              onClick={
+                isAuthenticated ? handleLogout : () => navigate("/login")
+              }
+            >
+              {isAuthenticated ? "Logout" : "Login"}
+            </Button>
+          </div>
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -178,7 +169,7 @@ const SuperAdminDashBoard = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Active Biddings</p>
-                  <p className="text-2xl font-bold">45</p>
+                  <p className="text-2xl font-bold">{allBiddingItems.length}</p>
                 </div>
               </CardContent>
             </Card>
@@ -227,15 +218,18 @@ const SuperAdminDashBoard = () => {
                 <CardContent>
                   <div className="h-[400px]">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={monthlyRevenue}>
+                      <LineChart data={getRevenueData()}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
                         <YAxis />
                         <Tooltip />
+                        <Legend />
                         <Line
                           type="monotone"
                           dataKey="revenue"
                           stroke="#2563eb"
+                          strokeWidth={2}
+                          name="Revenue"
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -247,66 +241,45 @@ const SuperAdminDashBoard = () => {
             <TabsContent value="biddings">
               <Card>
                 <CardHeader>
-                  <CardTitle>Manage Biddings</CardTitle>
-                  <div className="mt-4">
-                    <Input placeholder="Search biddings..." />
-                  </div>
+                  <CardTitle>Manage Bidding Items</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Farmer</TableHead>
-                        <TableHead>Buyer</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Proof Status</TableHead>
+                        <TableHead>Image</TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Starting Bid</TableHead>
+                        <TableHead>Highest Bid</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {biddings.map((bidding) => (
-                        <TableRow key={bidding.id}>
-                          <TableCell>{bidding.product}</TableCell>
-                          <TableCell>{bidding.farmer}</TableCell>
-                          <TableCell>{bidding.buyer}</TableCell>
-                          <TableCell>{bidding.amount}</TableCell>
+                      {allBiddingItems.map((bidding) => (
+                        <TableRow key={bidding._id}>
                           <TableCell>
-                            <span
-                              className={`inline-block px-2 py-1 rounded-full text-xs ${
-                                bidding.status === "Completed"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-yellow-100 text-yellow-800"
-                              }`}
-                            >
-                              {bidding.status}
-                            </span>
+                            {
+                              <img
+                                src={bidding?.image?.url}
+                                className="w-12 h-12 rounded object-cover"
+                              />
+                            }
                           </TableCell>
-                          <TableCell>
-                            <span
-                              className={`inline-block px-2 py-1 rounded-full text-xs ${
-                                bidding.proofStatus === "Verified"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
+                          <TableCell>{bidding.title}</TableCell>
+                          <TableCell>{bidding.startingBid}</TableCell>
+                          <TableCell>{bidding.currentBid}</TableCell>
+                          <TableCell className="flex gap-2">
+                            <Link to={`/bidding/details/${bidding._id}`}>
+                              <Button className="bg-blue-500 hover:bg-blue-700">
+                                View
+                              </Button>
+                            </Link>
+                            <Button
+                              className="bg-red-500 hover:bg-red-700 transition-all duration-300"
+                              onClick={() => handleDelete(bidding._id)}
                             >
-                              {bidding.proofStatus}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="outline">
-                                <Check className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-red-600"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
+                              Delete
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -344,6 +317,13 @@ const SuperAdminDashBoard = () => {
                           name="Buyers"
                           strokeWidth={2}
                         />
+                        <Line
+                          type="monotone"
+                          dataKey="total"
+                          stroke="red"
+                          name="Total Users"
+                          strokeWidth={2}
+                        />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
@@ -356,13 +336,17 @@ const SuperAdminDashBoard = () => {
                       <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
                       <span>Buyers</span>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span>Total Users</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
             <TabsContent value="payments">
-              <PaymentProof/>
+              <PaymentProof />
             </TabsContent>
           </Tabs>
         </div>
@@ -372,4 +356,3 @@ const SuperAdminDashBoard = () => {
 };
 
 export default SuperAdminDashBoard;
-

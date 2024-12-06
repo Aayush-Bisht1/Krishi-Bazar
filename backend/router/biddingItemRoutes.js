@@ -9,7 +9,7 @@ router.post("/create",isAuthenticated, isAuthorized("farmer"), trackCommissionSt
 router.get("/allitems",isAuthenticated,getAllItems);
 router.get("/item/:id",isAuthenticated,getBiddingDetails);
 router.get("/myitems",isAuthenticated,isAuthorized("farmer"),getMyBiddingItems);
-router.delete("/delete/:id",isAuthenticated, isAuthorized("farmer") ,removeFromBidding);
+router.delete("/delete/:id",isAuthenticated, isAuthorized(["farmer","superadmin"]) ,removeFromBidding);
 router.put("/item/republish/:id",isAuthenticated,isAuthorized("farmer"), republishItem);
 
 

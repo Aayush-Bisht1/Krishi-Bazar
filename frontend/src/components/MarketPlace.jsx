@@ -58,6 +58,7 @@ const MarketPlace = () => {
                     startTime={element.startTime}
                     endTime={element.endTime}
                     quantity={element.quantity}
+                    unit={element.unit}
                     createdBy={element.createdBy}
                     type={element.type}
                     startingBid={element.startingBid}

@@ -11,6 +11,12 @@ import Spinner from "@/components/Spinner";
 const FarmerDashBoard = () => {
   const { isAuthenticated, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  useEffect(() => {
+    if(!localStorage.getItem("selectedTab") && isAuthenticated ){
+      localStorage.setItem("selectedTab", "bidding");
+      setActiveTab("bidding");
+    }
+  },[isAuthenticated])
   const getStoredTab = () => localStorage.getItem("selectedTab") || "bidding";
   const [activeTab, setActiveTab] = useState(getStoredTab());
   const handleLogout = () => {

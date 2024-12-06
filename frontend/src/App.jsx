@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,17 +7,18 @@ import BuyerDashBoard from "./pages/BuyerDashBoard";
 import SuperAdminDashBoard from "./pages/SuperAdminDashBoard";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
-import { useDispatch } from "react-redux";
-import { fetchUser } from "./store/slices/userSlice";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MarketPlace from "./components/MarketPlace";
 import BiddingItem from "./pages/biddingItem";
 import ViewBiddingDetails from "./pages/ViewBiddingDetails";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "./store/slices/userSlice";
+import { useEffect } from "react";
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUser());
-  }, []);
+  },[dispatch]);
   return (
     <Router>
       <Routes>
@@ -30,7 +30,7 @@ function App() {
         <Route path="/marketplace" element={<MarketPlace />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/bidding/item/:id" element={<ProtectedRoute allowedRoles={["buyer"]}><BiddingItem /></ProtectedRoute>} />
-        <Route path="/bidding/details/:id" element={<ProtectedRoute allowedRoles={["farmer"]}><ViewBiddingDetails /></ProtectedRoute>} />
+        <Route path="/bidding/details/:id" element={<ProtectedRoute allowedRoles={["farmer","superadmin"]}><ViewBiddingDetails /></ProtectedRoute>} />
       </Routes>
       <ToastContainer position="top-right" />
     </Router>
