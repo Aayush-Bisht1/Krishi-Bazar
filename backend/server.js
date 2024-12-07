@@ -1,4 +1,4 @@
-import express, { application, json, urlencoded } from "express";
+import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(urlencoded({extended: true}));
 app.use(cors(
     {
-        origin: ["http://localhost:5173"],
+        origin: [process.env.FRONTEND_URL],
         methods: ["GET", "POST", "PUT", "DELETE"],
         credentials: true,
     }
