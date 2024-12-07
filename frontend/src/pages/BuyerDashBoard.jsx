@@ -42,13 +42,26 @@ const BuyerDashBoard = () => {
         <div className="p-4 max-w-6xl mx-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold mb-6 pt-3">Buyer Dashboard</h1>
-            <Button
-              onClick={
-                isAuthenticated ? handleLogout : () => navigate("/login")
-              }
-            >
-              {isAuthenticated ? "Logout" : "Login"}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={
+                  isAuthenticated
+                    ? () => navigate("/profile")
+                    : () => navigate("/login")
+                }
+                className="bg-blue-500 hover:bg-blue-600"
+              >
+                {isAuthenticated ? "Profile" : "Login"}
+              </Button>
+              <Button
+                onClick={
+                  isAuthenticated ? handleLogout : () => navigate("/login")
+                }
+                className="bg-red-500 hover:bg-red-600"
+              >
+                {isAuthenticated ? "Logout" : "Login"}
+              </Button>
+            </div>
           </div>
 
           <Tabs

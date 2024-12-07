@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MarketPlace from "./components/MarketPlace";
 import BiddingItem from "./pages/biddingItem";
 import ViewBiddingDetails from "./pages/ViewBiddingDetails";
+import UserProfile from "./pages/UserProfile";
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signup/:text" element={<SignUp />} />
         <Route path="/marketplace" element={<MarketPlace />} />
         <Route path="/login" element={<LogIn />} />
+        <Route path="/profile" element={<UserProfile />}/>
         <Route path="/bidding/item/:id" element={<ProtectedRoute allowedRoles={["buyer"]}><BiddingItem /></ProtectedRoute>} />
         <Route path="/bidding/details/:id" element={<ProtectedRoute allowedRoles={["farmer","superadmin"]}><ViewBiddingDetails /></ProtectedRoute>} />
       </Routes>
