@@ -28,6 +28,7 @@ KrishiBazar is a dynamic marketplace platform that bridges the gap between farme
 ## 💻 Tech Stack
 
 - **Frontend**: React
+- **State Management**: Redux
 - **Backend**: Node.js, Express js
 - **Database**: MongoDB
 - **Authentication**: JWT (JSON Web Tokens)
