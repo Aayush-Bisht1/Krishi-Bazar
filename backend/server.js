@@ -13,10 +13,12 @@ import commissionRouter from "./router/commissionRoutes.js"
 import superAdminRouter from "./router/superAdminRoutes.js"
 import {endedBiddingCron} from "./automation/endedBiddingCron.js"
 import {verifyCommissionCron} from "./automation/verifyCommissionCron.js"
+import path from "path"
 
 dotenv.config();
 
 const app = express();
+const __dirname = path.resolve();
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -45,12 +47,19 @@ app.use("/api/v1/bid",bidRouter);
 app.use("/api/v1/commission",commissionRouter);
 app.use("/api/v1/superadmin",superAdminRouter);
 
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
 
 endedBiddingCron();
 verifyCommissionCron();
-connectDB();
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
+    connectDB();
 })

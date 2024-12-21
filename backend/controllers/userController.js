@@ -112,15 +112,6 @@ export const getProfile = catchAsyncErrors(async (req,res,next) => {
     });
 });
 
-export const fetchLeaderboard = catchAsyncErrors(async (req,res,next) => {
-    const users = User.find({moneySpent: {$gt: 0}});
-    const leaderboard = users.sort((a,b)=> b.moneySpent - a.moneySpent);
-    res.status(200).json({
-        success: true,
-        leaderboard,
-    })
-});
-
 export const getUserById = catchAsyncErrors(async (req,res,next) => {
     const {id} = req.params;
     if(!mongoose.Types.ObjectId.isValid(id)){
