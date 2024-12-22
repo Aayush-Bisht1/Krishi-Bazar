@@ -69,7 +69,7 @@ export const TimeDisplay = ({ startTime, endTime }) => {
   );
 };
 
-const BiddingDetails = () => {
+const BiddingItem = () => {
   const navigate = useNavigate();
   const [amount, setAmount] = useState(0);
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -340,4 +340,4 @@ const BiddingDetails = () => {
   );
 };
 
-export default BiddingDetails;
+export default BiddingItem;

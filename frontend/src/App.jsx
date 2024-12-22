@@ -9,7 +9,7 @@ import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MarketPlace from "./components/MarketPlace";
-import BiddingItem from "./pages/biddingItem";
+import BiddingItem from "./pages/BiddingItem";
 import ViewBiddingDetails from "./pages/ViewBiddingDetails";
 import UserProfile from "./pages/UserProfile";
 function App() {
