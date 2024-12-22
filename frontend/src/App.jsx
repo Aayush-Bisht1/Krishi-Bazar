@@ -12,17 +12,7 @@ import MarketPlace from "./components/MarketPlace";
 import BiddingItem from "./pages/BiddingItem";
 import ViewBiddingDetails from "./pages/ViewBiddingDetails";
 import UserProfile from "./pages/UserProfile";
-import { useEffect } from "react";
-import axios from "axios";
 function App() {
-
-  useEffect(() => {
-    axios.defaults.baseURL =
-      process.env.NODE_ENV === "production"
-        ? ""
-        : "https://krishi-bazar-sah5.onrender.com";
-    axios.defaults.withCredentials = true;
-  },[]);
   return (
     <Router>
       <Routes>

@@ -107,7 +107,7 @@ export const getMonthlyRevenue = () => async (dispatch) => {
   dispatch(superAdminSlice.actions.getMonthlyRevenueRequest());
   try {
     const response = await axios.get(
-      "/api/v1/superadmin/monthlyrevenue",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/monthlyrevenue",
       {
         withCredentials: true,
       }
@@ -128,7 +128,7 @@ export const fetchAllUsers = () => async (dispatch) => {
   dispatch(superAdminSlice.actions.fetchAllUsersRequest());
   try {
     const response = await axios.get(
-      "/api/v1/superadmin/users/getall",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/users/getall",
       {
         withCredentials: true,
       }
@@ -145,7 +145,7 @@ export const getAllPaymentProofs = () => async (dispatch) => {
   dispatch(superAdminSlice.actions.getAllPaymentProofsRequest());
   try {
     const response = await axios.get(
-      "/api/v1/superadmin/paymentproofs/getall",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/paymentproofs/getall",
       {
         withCredentials: true,
       }
@@ -166,7 +166,7 @@ export const deletePaymentProof = (id) => async (dispatch) => {
   dispatch(superAdminSlice.actions.deletePaymentProofRequest());
   try {
     const response = await axios.delete(
-      `/api/v1/superadmin/paymentproof/delete/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/paymentproof/delete/${id}`,
       {
         withCredentials: true,
       }
@@ -184,7 +184,7 @@ export const getSinglePaymentProof = (id) => async (dispatch) => {
   dispatch(superAdminSlice.actions.getSinglePaymentProofRequest());
   try {
     const response = await axios.get(
-      `/api/v1/superadmin/paymentproof/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/paymentproof/${id}`,
       {
         withCredentials: true,
       }
@@ -205,7 +205,7 @@ export const updatePaymentProof = (id, status, amount) => async (dispatch) => {
   dispatch(superAdminSlice.actions.updateProofStatusRequest());
   try {
     const response = await axios.put(
-      `/api/v1/superadmin/paymentproof/status/update/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/paymentproof/status/update/${id}`,
       {status,amount},
       {
         withCredentials: true,
@@ -226,7 +226,7 @@ export const deleteBiddingItem = (id) => async (dispatch) => {
   dispatch(superAdminSlice.actions.deleteBiddingItemRequest());
   try {
     const response = await axios.delete(
-      `/api/v1/superadmin/biddingitem/delete/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/superadmin/biddingitem/delete/${id}`,
       {
         withCredentials: true,
       }

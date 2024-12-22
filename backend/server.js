@@ -29,10 +29,7 @@ cloudinary.config({
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "production"
-      ? "https://krishi-bazar-sah5.onrender.com"
-      : process.env.FRONTEND_URL,
+  origin: "https://krishi-bazar-sah5.onrender.com",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
 };
@@ -46,25 +43,16 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(_dirname, "/frontend/dist")));
-}
-
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/biddingitem", biddingItemRouter);
 app.use("/api/v1/bid", bidRouter);
 app.use("/api/v1/commission", commissionRouter);
 app.use("/api/v1/superadmin", superAdminRouter);
 
-if(process.env.NODE_ENV === "production"){
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
-  });
-}
+app.use(express.static(path.join(_dirname, "/frontend/dist")));
+app.get("*", (_, res) => {
+  res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+})
 
 endedBiddingCron();
 verifyCommissionCron();

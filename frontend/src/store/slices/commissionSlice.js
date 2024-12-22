@@ -24,7 +24,7 @@ export const postCommissionProof = (data) => async (dispatch) => {
   dispatch(commissionSlice.actions.postCommissionProofRequest());
   try {
     const response = await axios.post(
-      "/api/v1/commission/proof",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/commission/proof",
       data,
       {
         withCredentials: true,

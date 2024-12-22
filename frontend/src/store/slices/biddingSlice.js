@@ -80,7 +80,7 @@ export const getAllBiddingItems = () => async (dispatch) => {
   dispatch(biddingSlice.actions.getAllBiddingItemsRequest());
   try {
     const response = await axios.get(
-      "/api/v1/biddingitem/allitems",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/biddingitem/allitems",
       {
         withCredentials: true,
       }
@@ -99,7 +99,7 @@ export const getBiddingDetails = (id) => async (dispatch) => {
   dispatch(biddingSlice.actions.getBiddingDetailsRequest());
   try {
     const response = await axios.get(
-      `/api/v1/biddingitem/item/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/biddingitem/item/${id}`,
       {
         withCredentials: true,
       }
@@ -115,7 +115,7 @@ export const createBiddingItem = (data) => async (dispatch) => {
   dispatch(biddingSlice.actions.createBiddingItemRequest());
   try {
     const response = await axios.post(
-      "/api/v1/biddingitem/create",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/biddingitem/create",
       data,
       {
         withCredentials: true,
@@ -134,7 +134,7 @@ export const getMyBiddingItems = () => async(dispatch) => {
   dispatch(biddingSlice.actions.getMyBiddingItemsRequest());
   try {
     const response = await axios.get(
-      "/api/v1/biddingitem/myitems",
+      "https://krishi-bazar-sah5.onrender.com/api/v1/biddingitem/myitems",
       {
         withCredentials: true,
       }
@@ -150,7 +150,7 @@ export const deleteBiddingItem = (id) => async (dispatch) => {
   dispatch(biddingSlice.actions.deleteBiddingItemRequest());
   try {
     const response = await axios.delete(
-      `/api/v1/biddingitem/delete/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/biddingitem/delete/${id}`,
       {
         withCredentials: true,
       }
@@ -169,7 +169,7 @@ export const republishBiddingItem = (id,data) => async (dispatch) => {
   dispatch(biddingSlice.actions.republishBiddingItemRequest());
   try {
     const response = await axios.put(
-      `/api/v1/biddingitem/item/republish/${id}`,
+      `https://krishi-bazar-sah5.onrender.com/api/v1/biddingitem/item/republish/${id}`,
       data,
       {
         withCredentials: true,
