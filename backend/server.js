@@ -18,7 +18,7 @@ import path from "path";
 dotenv.config();
 
 const app = express();
-const __dirname = path.resolve();
+const _dirname = path.resolve();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+  app.use(express.static(path.join(_dirname, "/frontend/dist")));
 }
 
 app.use("/api/v1/user", userRouter);
@@ -62,7 +62,7 @@ app.use("/api/v1/superadmin", superAdminRouter);
 
 if(process.env.NODE_ENV === "production"){
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
   });
 }
 
