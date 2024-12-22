@@ -41,6 +41,9 @@ app.use(fileUpload({
     tempFileDir: "/tmp/",
 }))
 
+app.get('/', (req, res) => {
+    res.send('Server is running');
+  });
 app.use("/api/v1/user",userRouter);
 app.use("/api/v1/biddingitem",biddingItemRouter);
 app.use("/api/v1/bid",bidRouter);
