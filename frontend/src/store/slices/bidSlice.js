@@ -24,7 +24,7 @@ const bidSlice = createSlice({
 export const placeBid = (id,data) => async (dispatch) => {
     dispatch(bidSlice.actions.bidRequest());
     try {
-        const response = await axios.post(`http://localhost:5000/api/v1/bid/placebid/${id}`,data,{
+        const response = await axios.post(`/api/v1/bid/placebid/${id}`,data,{
             withCredentials: true,
             headers: { "Content-Type": "application/json" },
         });
